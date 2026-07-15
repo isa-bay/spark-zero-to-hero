@@ -6,162 +6,177 @@
 ### 1. Фундамент
 </summary>
 
-- [Введение в Spark]()
-  - [Проблемы традиционной обработки данных (MapReduce)]()
-  - [Что такое Apache Spark?]()
-  - [История создания]()
-  - [Философия Spark]()
-  - [Области применения]()
-  - [Версии Spark]()
-  - [Плюсы и минусы]()
-- [Установка и настройка]()
-  - []()
-  - []()
-  - []()
-  - []()
-  - []()
-- [Архитектура кластера Spark]()
-  - [Компоненты]()
-  - [Роль и жизненный цикл Driver-а]()
-  - [Роль и жизненный цикл Executor-ов]()
-  - [Задачи (Tasks), стадии (Stages), этапы (Jobs)]()
-  - [Режимы развертывания (Deploy Modes): client vs cluster]()
-- [Архитектура приложения]()
-  - [SparkContext (SparkContext, SparkSession)]()
-  - [SparkConf — конфигурация приложения]()
-  - [Spark UI — интерфейс для мониторинга]()
-- [Основные абстракции данных (Core Abstractions)]()
-  - [RDD (Resilient Distributed Dataset)]()
-    - [Что такое RDD?]()
-    - [Создание RDD]()
-    - [Трансформации (Transformations)]()
-    - [Действия (Actions)]()
-    - [Узкие и широкие зависимости]()
-  - [DataFrame (Распределенная коллекция строк)]()
-    - [Отличие от RDD]()
-    - [Реляционные операции]()
-    - [Бестиповый API]()
-  - [Dataset (Типизированный интерфейс)]()
-    - [Сочетание преимуществ RDD (типобезопасность) и DataFrame (оптимизация)]()
-    - [Энкодеры (Encoders)]()
-  - [Сравнение и выбор: RDD vs DataFrame vs Dataset]()
-- [Физическое исполнение]()
-  - [Процесс выполнения запроса: от кода до результата]()
-  - [Анализ логического плана (Logical Plan)]()
-  - [Оптимизация логического плана (Catalyst Optimizer)]()
-  - [Планирование физического плана (Physical Planning)]()
-  - [Генерация кода (Whole-stage Code Generation)]()
-  - [Выполнение задач на кластере (Tungsten)]()
-- [Менеджеры кластеров (Cluster Managers)]()
-  - [Standalone: простой кластер, встроенный в Spark]()
-  - [Apache Hadoop YARN: интеграция с Hadoop-экосистемой]()
-  - [Apache Mesos: (историческая справка)]()
-  - [Kubernetes: современный стандарт для оркестрации контейнеров]()
-  - [Сравнение и выбор менеджера]()
-- [Система хранения (Storage) для Spark]()
-  - [Подключение к различным источникам]()
-  - [Важность размещения данных (Data Locality)]()
+- **Введение в Spark**
+  - Проблемы традиционной обработки данных (MapReduce)
+  - Что такое Apache Spark?
+  - История создания и философия
+  - Области применения и версии Spark
+  - Плюсы и минусы Spark, сравнение с альтернативами (Flink, Trino)
+- **Установка и настройка**
+  - Локальная установка (Windows, macOS, Linux)
+  - Настройка Spark в Docker-контейнере
+  - Подключение к облачным сервисам (EMR, Dataproc, HDInsight)
+  - Сборка из исходников и подключение Spark к IDE (IntelliJ, VSCode)
+  - Типовые конфигурационные файлы (spark-defaults.conf, log4j.properties)
+- **Архитектура кластера**
+  - Компоненты: Driver, Executor, Cluster Manager
+  - Жизненный цикл Driver и Executor
+  - Задачи (Tasks), стадии (Stages), этапы (Jobs)
+  - Режимы развёртывания (client vs cluster)
+  - Динамическое выделение ресурсов (Dynamic Allocation) — обзор
+- **Архитектура приложения**
+  - SparkContext, SparkSession, SparkConf
+  - Spark UI и History Server
+  - Логирование и конфигурирование для разных окружений (dev/stage/prod)
+- **Основные абстракции данных**
+  - **RDD**
+    - Понятие, неизменяемость, отказоустойчивость (lineage)
+    - Создание (parallelize, из внешних источников)
+    - Трансформации (map, filter, flatMap, mapPartitions и др.) и действия (reduce, collect, count и др.)
+    - Узкие и широкие зависимости, влияние на shuffle
+  - **DataFrame**
+    - Отличие от RDD: Catalyst, Tungsten, бестиповый API
+    - Схема (StructType) и её задание
+    - Реляционные операции
+  - **Dataset**
+    - Типобезопасность, энкодеры (Encoders)
+    - Сочетание преимуществ RDD и DataFrame
+  - **Сравнение RDD, DataFrame, Dataset** — когда что выбирать
+- **Физическое исполнение**
+  - Жизненный цикл запроса: парсинг → анализ → оптимизация → физический план → генерация кода → выполнение
+  - Catalyst Optimizer: логические и физические правила
+  - Tungsten: управление памятью вне кучи, кодогенерация целых стадий (Whole-Stage CodeGen)
+  - Predicate pushdown и column pruning
+- **Менеджеры кластеров**
+  - Standalone (простой, встроенный)
+  - Hadoop YARN (интеграция с Hadoop)
+  - Mesos (историческая справка)
+  - Kubernetes (современный стандарт, Spark Operator, поды)
+  - Сравнение: выбор менеджера под задачу
+- **Системы хранения**
+  - Подключение к HDFS, S3 (s3a), ADLS, GCS, локальной FS
+  - Важность локальности данных (Data Locality) и настройки `spark.locality.wait`
+  - Поддержка облачных объектных хранилищ: консистентность, коммиттеры (S3A Committer, Magic Committer)
+
 </details>
 
 <details>
 <summary>
 
-### 2. API и работа с данными (Синтаксис и инструменты)
+### 2. API и работа с данными
 </summary>
 
-- Spark SQL
-  - Основы: создание таблиц и представлений
-  - Выполнение SQL-запросов в Spark (`spark.sql`)
-  - Взаимодействие DataFrames и SQL-таблиц
-  - Встроенные функции (Built-in Functions)
-- DataFrame API (основной инструмент инженера)
-  - Основные операции:
-    - select, withColumn, drop, filter/where
-    - groupBy, agg, pivot
-    - join (все типы: inner, outer, left, right, semi, anti)
-    - union, intersect, except
+- **Spark SQL**
+  - Создание таблиц и представлений (временные, глобальные, перманентные)
+  - Интеграция с Hive Metastore
+  - Выполнение SQL-запросов (`spark.sql`)
+  - Взаимодействие DataFrame и SQL
+  - Встроенные функции (строковые, математические, агрегатные)
+  - `cube`, `rollup`, `grouping sets` для многомерных отчётов
+- **DataFrame API**
+  - Базовые операции: select, withColumn, drop, filter/where, distinct
+  - Агрегации: groupBy, agg, pivot
+  - Типы join: inner, outer, left, right, semi, anti; cross join
+  - Union, intersect, except
   - Работа со сложными типами:
-    - Структуры (StructType, StructField)
-    - Массивы (ArrayType) и функции для работы с ними (explode, split, array_contains)
-    - Карты (MapType)
-    - JSON-данные (from_json, to_json, get_json_object, json_tuple)
-  - Работа с null-значениями:
-    - Обработка null: fill, drop, replace
-    - Функции для работы с null: `isNull`, `isNotNull`, `coalesce`, `when`, `nanvl`
-  - Оконные функции (Window Functions)
-    - Определение оконных спецификаций (partitionBy, orderBy, rowsBetween)
-    - Ранжирующие функции (rank, dense_rank, row_number)
-    - Аналитические функции (lead, lag, first_value, last_value)
+    - StructType / StructField
+    - ArrayType (explode, posexplode, array_contains, filter, transform)
+    - MapType (keys, values, explode)
+    - JSON: from_json, to_json, get_json_object, schema_of_json
+  - Обработка null: fill, drop, replace; функции coalesce, ifnull, isnull, nanvl, when
+  - Оконные функции:
+    - Определение окна (partitionBy, orderBy, rowsBetween/rangeBetween)
+    - Ранжирующие: row_number, rank, dense_rank, percent_rank, ntile
+    - Аналитические: lead, lag, first_value, last_value
     - Агрегатные функции с окнами
-- RDD API (для legacy-кода и сложных случаев)
-  - Основные трансформации: map, flatMap, filter, mapPartitions, groupByKey, reduceByKey, aggregateByKey, sortByKey
-  - Действия: reduce, collect, count, take, saveAsTextFile
-  - PairRDD и работа с ключ-значение
-  - Накопления (Accumulators) и широковещательные переменные (Broadcast Variables)
-- Работа с датой и временем
-  - Парсинг строк в даты (to_date, to_timestamp)
-  - Извлечение частей даты (year, month, day, hour)
-  - Арифметика дат (date_add, date_sub, datediff, months_between)
-  - Работа с временными зонами
-- Пользовательские функции (UDFs)
-  - UDF (User Defined Function): "Черный ящик" для Spark, пробуксовка производительности.
-  - UDAF (User Defined Aggregation Function): Создание собственных агрегатных функций.
-  - Pandas UDF (Vectorized UDF): Революция в производительности (PySpark). Использование Apache Arrow.
-  - Pandas Function APIs: groupBy().apply(), groupBy().applyInPandas()
-  - Когда использовать UDFs, а когда стараться избегать
+- **RDD API (для legacy и низкоуровневых операций)**
+  - Трансформации: map, flatMap, filter, mapPartitions, mapPartitionsWithIndex, glom
+  - PairRDD: groupByKey, reduceByKey, aggregateByKey, combineByKey, sortByKey
+  - Действия: reduce, fold, aggregate, collect, count, take, top, foreach, foreachPartition
+  - Накопители (Accumulators) и широковещательные переменные (Broadcast Variables)
+  - Сохранение RDD в файлы (saveAsTextFile, saveAsObjectFile)
+- **Работа с датой и временем**
+  - Парсинг: to_date, to_timestamp, unix_timestamp
+  - Извлечение компонентов: year, month, day, hour, minute, second
+  - Арифметика: date_add, date_sub, datediff, months_between, add_months
+  - Работа с временными зонами: from_utc_timestamp, to_utc_timestamp
+- **Пользовательские функции (UDF)**
+  - UDF: регистрация, ограничения (чёрный ящик для Catalyst)
+  - UDAF (агрегатные функции) – через Aggregator API
+  - Pandas UDF (векторизованные): Series → Series, Iterator of Series → Iterator of Series
+  - Pandas Function APIs: groupby().applyInPandas(), mapInPandas()
+  - PySpark UDF vs Pandas UDF: когда что применять
+  - UDF в Scala/Java и рекомендации по производительности
+- **Дополнительные API**
+  - Чтение/запись через JDBC: параллелизация, настройка fetchsize, batchsize
+  - Работа с бинарными данными и схемами Avro
+  - Статистические функции: summary, approxQuantile, corr, crosstab, sampleBy
+
 </details>
 
 <details>
 <summary>
 
-### 3. Оптимизация и тонкая настройка производительности (Performance Tuning)
+### 3. Оптимизация и тонкая настройка
 </summary>
 
-- Понимание планов запросов (Query Plans)
-  - Чтение и интерпретация `explain()`
+- **Понимание планов запросов**
+  - Чтение и интерпретация `explain()` (включая формат `formatted`, `cost`, `codegen`)
   - Разница между логическим и физическим планом
-  - Поиск узких мест в плане (Exchange, Sort, Shuffle)
-- Партиционирование (Partitioning) — ключ к производительности
-  - Что такое партиция в Spark?
-  - Как Spark создает партиции
-  - Влияние размера партиции на производительность (слишком маленькие или слишком большие)
-  - Методы управления: `repartition()` (полный shuffle) vs `coalesce()` (сужение)
-  - Способы разбиения данных: хэш-партиционирование, диапазонное партиционирование
-  - Спецификация партиций при записи (partitionBy)
-  - Бакетирование (Bucketing) — для оптимизации будущих join'ов
-- Управление памятью и исполнителями (Memory Management)
-  - Архитектура памяти Executor-а: On-Heap vs Off-Heap
+  - Анализ узких мест: Exchange, Sort, BroadcastExchange
+  - Использование DAG визуализации в Spark UI
+- **Партиционирование**
+  - Понятие партиции, факторы, влияющие на их количество
+  - `repartition()` (полный shuffle) vs `coalesce()` (сужение без shuffle)
+  - `spark.sql.shuffle.partitions`, `spark.default.parallelism`
+  - Партиционирование при записи (`partitionBy`), последствия для small files
+  - Бакетирование (Bucketing): создание, использование при join, ограничения
+  - Диапазонное и хэш-партиционирование
+- **Управление памятью**
+  - Архитектура памяти Executor: On-Heap и Off-Heap (Tungsten)
   - Области памяти: Execution, Storage, Reserved, User Memory
-  - Понятие Spark Memory Fraction (`spark.memory.fraction`, `spark.memory.storageFraction`)
-  - Настройка параллелизма: `spark.sql.shuffle.partitions`, `spark.default.parallelism`
-  - Настройка количества исполнителей, ядер и памяти (executor-cores, executor-memory)
-- Кэширование и персистентность (Caching & Persistence)
-  - Разница между cache() и persist()
-  - Уровни хранения (Storage Levels): MEMORY_ONLY, MEMORY_AND_DISK, DISK_ONLY, OFF_HEAP, и их влияние на сериализацию
-  - Проверка точек (Checkpointing) — для разрыва длинных цепочек зависимостей
-  - Когда кэшировать, а когда нет
-- Оптимизация Shuffle (Тасовки)
-  - Что такое shuffle и почему это дорого
-  - Настройка Shuffle Partitions
-  - Избегание shuffle (например, через трансформации типа map-side combine)
-  - Использование Salted Keys для решения проблемы перекоса данных (Data Skew)
-  - Настройка параметров shuffle (буферы, сжатие)
-- Join-оптимизации
-  - Типы Join'ов в Spark: Broadcast Hash Join, Sort Merge Join, Shuffled Hash Join
-  - Как Spark выбирает стратегию join'а
-  - Принуждение к Broadcast Join (`/*+ BROADCAST(t) */`, `spark.sql.autoBroadcastJoinThreshold`)
-  - Оптимизация для перекошенных данных при join (Skew Join Optimization)
-- Настройка сериализации
-  - Java сериализация (по умолчанию, но медленная)
-  - Kryo сериализация — быстрее и компактнее. Как ее включить и зарегистрировать классы
-- Адаптивное исполнение запросов (Adaptive Query Execution — AQE)
-  - Что такое AQE (Spark 3.x)
-  - Динамическое объединение перекошенных партиций (Dynamic Coalescing of Shuffle Partitions)
-  - Динамическая смена стратегии join'а (Dynamic Switch Join Strategies)
-  - Динамическая оптимизация перекоса (Dynamic Optimize Skew Join)
-- Динамическое распределение ресурсов (Dynamic Resource Allocation)
-  - Как Spark может возвращать неиспользуемые ресурсы обратно в кластер
-  - Настройка для динамического масштабирования
+  - `spark.memory.fraction`, `spark.memory.storageFraction`
+  - Настройка GC: G1GC, Parallel GC, мониторинг пауз через Spark UI / jstat
+  - Spill to disk: причины, влияние, минимизация
+  - OutOfMemoryError: диагностика по логам и UI, типовые решения
+  - Настройка числа ядер и памяти исполнителей (executor-cores, executor-memory)
+- **Кэширование и сохранение**
+  - `cache()` vs `persist()`, уровни хранения (MEMORY_ONLY, MEMORY_AND_DISK, etc.)
+  - Сериализация в кэше (Kryo)
+  - Checkpointing: разрыв lineage, запись на надёжное хранилище, отличие от persist
+  - Когда кэшировать, а когда нет (анализ lineage, многократное использование)
+- **Оптимизация Shuffle**
+  - Почему shuffle дорог: сетевой обмен, диск, сериализация
+  - Map-side combine (reduceByKey vs groupByKey)
+  - Настройка буферов: `spark.reducer.maxSizeInFlight`, `spark.shuffle.file.buffer`
+  - Сжатие shuffle: `spark.shuffle.compress`, `spark.io.compression.codec`
+  - Data Skew (перекос данных):
+    - Обнаружение перекоса через Spark UI (размер задач, время выполнения)
+    - Техники борьбы: salting ключей, разделение ключей на горячие/холодные, AQE Skew Join Optimization
+  - Speculative Execution: борьба с медленными задачами
+- **Join-оптимизации**
+  - Стратегии: Broadcast Hash Join, Sort Merge Join, Shuffled Hash Join, Cartesian Join
+  - Как Spark выбирает стратегию (cost-based оптимизатор CBO, сбор статистики)
+  - `spark.sql.autoBroadcastJoinThreshold`, хинт `/*+ BROADCAST(t) */`
+  - Оптимизация при перекосе данных в join: salt, AQE Dynamic Optimize Skew Join
+  - Bucket Join: преимущества и требования
+  - Оптимизация сбора статистики таблиц (`ANALYZE TABLE`)
+- **Настройка сериализации**
+  - Java serialization (медленно, громоздко)
+  - Kryo serialization: включение, регистрация классов, `spark.kryo.registrationRequired`
+- **Адаптивное выполнение (AQE)**
+  - Основные фичи: динамическое слияние shuffle-партиций, динамическая смена стратегии join, оптимизация перекоса
+  - Настройка и мониторинг AQE
+- **Динамическое выделение ресурсов**
+  - Принцип работы: освобождение idle executor-ов, запрос новых
+  - Настройка для YARN, Kubernetes
+  - Взаимодействие с shuffle-файлами и внешним shuffle-сервисом
+- **Работа с маленькими файлами**
+  - Проблема “small files” на чтении и записи
+  - Компактирование файлов (Spark job, Delta Optimize, Hudi Clustering)
+  - Настройка `maxRecordsPerFile` при записи
+  - Коалесценция перед записью
+
 </details>
 
 <details>
@@ -170,40 +185,57 @@
 ### 4. Экосистема и интеграции
 </summary>
 
-- Spark Streaming (Стриминговая обработка)
-  - DStream (Discretized Stream)
-    - Устаревший подход на базе RDD
-  - Structured Streaming (современный стандарт)
-    - Модель: бесконечная таблица
-    - Режимы вывода (Output Modes): Append, Update, Complete
-    - Триггеры (Triggers): Processing time, Event time, Once, Continuous
-    - Обработка событийного времени (Event-time) и водяные знаки (Watermarking)
-    - Обработка поздних данных (Late Data)
-    - Обеспечение отказоустойчивости и exactly-once семантики (WAL, checkpointing)
-    - Stateful Streaming: работа с состоянием (mapGroupsWithState, flatMapGroupsWithState)
-- Spark MLlib (Машинное обучение)
-  - Концепция Pipeline: Transformer, Estimator, Evaluator
-  - Feature engineering: векторизация (VectorAssembler), нормализация, кодирование (StringIndexer, OneHotEncoder)
-  - Основные алгоритмы: линейная регрессия, деревья решений, случайный лес, кластеризация (K-means)
-  - Сохранение и загрузка моделей
-- GraphX (Обработка графов)
-  - Абстракции: Graph, VertexRDD, EdgeRDD
-  - Алгоритмы: PageRank, Connected Components, Triangle Counting
-  - Операторы на графах (mapVertices, mapEdges, subgraph, aggregateMessages)
-- Глубокое обучение с Spark
-  - Spark Deep Learning
-  - Интеграция с TensorFlow (Horovod on Spark, TFoS) и PyTorch
-- Языки программирования в Spark
-  - Scala: Родной язык, максимальная производительность и возможности
-  - PySpark: Python API. Популярность, экосистема, особенности (Pandas UDF)
-  - SparkR: R API.
-  - SQL: Универсальный интерфейс.
-  - Сравнение и выбор языка для задач
-- Форматы данных
-  - Текстовые: CSV, JSON (плюсы и минусы)
-  - Структурированные: Parquet (стандарт для Spark, колоночное хранение), Avro, ORC
-  - Сравнение Parquet vs Avro vs ORC vs JSON
-  - Векторный формат: Delta Lake (см. ниже)
+- **Spark Streaming**
+  - **DStream** (устаревший, ознакомительно): создание, операции с окнами
+  - **Structured Streaming**
+    - Модель бесконечной таблицы и программирование как над статическим DataFrame
+    - Режимы вывода: Append, Update, Complete
+    - Триггеры: Processing time, Event time, Once, Continuous
+    - Водяные знаки (Watermarking) и обработка поздних событий
+    - Exactly-once семантика: чекпоинтинг, WAL, идемпотентные приёмники
+    - Stateful-обработка: mapGroupsWithState, flatMapGroupsWithState
+    - Соединения: stream-static и stream-stream join
+    - Дедупликация событий (dropDuplicates с watermark)
+    - Интеграция с Kafka: источники, смещения (offsets), стратегии сброса, SASL/SSL
+    - Продвинутые приёмники: foreachBatch, Cassandra, Delta, Iceberg
+    - Режим continuous processing (особенности и ограничения)
+- **Spark MLlib**
+  - Pipeline API: Transformer, Estimator, Evaluator, PipelineModel
+  - Feature Engineering:
+    - Векторизация: VectorAssembler, CountVectorizer, TF-IDF
+    - Нормализация: StandardScaler, MinMaxScaler
+    - Кодирование категориальных признаков: StringIndexer, OneHotEncoder, Bucketizer
+    - Обработка пропусков: Imputer
+  - Алгоритмы: логистическая регрессия, случайный лес, градиентный бустинг, K-means
+  - Кросс-валидация и подбор гиперпараметров
+  - Сохранение и загрузка моделей (MLeap, PMML)
+  - Feature Store: концепция и интеграция с Spark (Feast, Databricks Feature Store)
+- **GraphX / GraphFrames**
+  - Абстракции: Graph, VertexRDD, EdgeRDD, GraphFrame
+  - Алгоритмы: PageRank, Connected Components, Label Propagation
+  - Операторы: aggregateMessages, motif finding
+  - GraphFrames: преимущества перед GraphX (DataFrame-based API)
+- **Глубокое обучение**
+  - TensorFlow on Spark (Horovod, TFoS)
+  - PyTorch и Spark (TorchDistributor, SparkTorch)
+  - Ускорение инференса с Pandas UDF
+- **Языки программирования**
+  - Scala: нативный язык, максимальная производительность, implicit encoders
+  - PySpark: Python API, Pandas UDF, Arrow-оптимизации
+  - SparkR, Java – обзор
+  - SQL как универсальный интерфейс
+  - Выбор языка под задачу и команду
+- **Форматы данных**
+  - CSV, JSON: плюсы, минусы, настройки парсинга (опция `mode` для bad records)
+  - Parquet: колоночное хранение, сжатие, предикатный пушдаун, схема эволюции
+  - Avro: row-based, интеграция со Schema Registry
+  - ORC: оптимизирован для Hive, преимущества
+  - Сравнение Parquet vs Avro vs ORC, выбор для слоёв данных (raw vs processed)
+- **Облачные интеграции**
+  - Amazon EMR, Google Dataproc, Azure HDInsight: особенности настройки, работа с объектными хранилищами
+  - Databricks: управляемый Spark, Delta Lake, Workflows, SQL Analytics
+  - Serverless Spark (AWS Glue, Google Dataproc Serverless)
+
 </details>
 
 <details>
@@ -212,76 +244,101 @@
 ### 5. Продвинутые темы и инструменты Data Engineer
 </summary>
 
-- Delta Lake (Озеро данных с ACID-транзакциями)
-  - Что такое Delta Lake и зачем он нужен
-  - Основные возможности:
-    - ACID-транзакции
-    - Время путешествий (Time Travel) и аудит изменений
-    - Schema enforcement и schema evolution
-    - Upsert/Merge (команда `MERGE`)
-    - Vacuum — очистка старых снапшотов
-  - Формат хранения: Parquet + транзакционный лог (Delta Log)
-  - Оптимизация Delta Lake: Z-Ordering, Liquid Clustering, Compact (bin-compaction)
-  - Delta Live Tables (DLT) — декларативный ETL на Databricks
-- Apache Iceberg и Apache Hudi
-  - Альтернативы Delta Lake для управления таблицами в Data Lake
-  - Сравнение: Iceberg, Hudi, Delta Lake — когда что выбирать
-- Lakehouse Architecture (Архитектура Озеро-Хранилище)
-  - Концепция объединения лучших качеств Data Lake и Data Warehouse
-- Инструменты для разработки и тестирования
-  - Разработка локально с использованием `spark-submit`
-  - Интерактивная разработка: Jupyter Notebooks, Apache Zeppelin, Databricks Notebooks
-  - Тестирование Spark-приложений:
-    - `chispa` (библиотека для PySpark assertion)
-    - `spark-testing-base` (для Scala)
-    - Стратегии тестирования: модульные тесты трансформаций, интеграционные тесты с локальным Spark
-  - Отладка: логи, Spark UI, история событий (History Server)
-- Безопасность (Security)
-  - Аутентификация: Kerberos, токены
-  - Авторизация: SQL Standard, Ranger/Sentry
-  - Шифрование данных: на диске (TDE), в сети (TLS/SSL)
-  - Безопасность на уровне строк и столбцов (Row/Column level security)
-  - Динамическое маскирование данных (Dynamic Data Masking)
-- Мониторинг и логирование (Observability)
-  - Spark UI: глубокий анализ (страница Stages, Storage, Environment, Executors, SQL)
-  - История событий (Spark History Server)
-  - Метрики Spark: интеграция с Prometheus, Graphite, Ganglia
-  - Сбор логов драйвера и исполнителей (stdout, stderr) через YARN/Kubernetes
-  - Настройка прослушивателей событий (Spark Listeners) для кастомного мониторинга
-- Управление зависимостями
-  - Упаковка приложения в "толстый" JAR (fat/uber JAR) для Scala
-  - `--py-files` для PySpark
-  - `--packages` для Maven-координат
-  - Решение конфликтов версий библиотек
+- **Delta Lake (глубокое погружение)**
+  - ACID-транзакции, оптимистическая конкурентность
+  - Time Travel, audit logs, восстановление состояния таблицы
+  - Schema enforcement и evolution
+  - Upsert / Merge: синтаксис, оптимизация, работа с несколькими условиями
+  - Vacuum: очистка старых файлов снапшотов
+  - Delta Log: структура, checkpoints
+  - Оптимизации: Compaction (OPTIMIZE), Z-Ordering, Liquid Clustering
+  - Delta Live Tables (DLT): декларативный ETL, контроль качества данных (expectations)
+  - Change Data Feed (CDF) для CDC-сценариев
+- **Apache Iceberg**
+  - Архитектура: метаданные, манифесты, файлы данных
+  - Преимущества: скрытое партиционирование, эволюция схемы, путешествие во времени
+  - Row-level delete/update (merge-on-read vs copy-on-write)
+  - Интеграция со Spark: чтение, запись, процедуры (rewrite_manifests, expire_snapshots)
+  - Сравнение с Delta Lake и Hudi
+- **Apache Hudi**
+  - Таблицы Copy-on-Write vs Merge-on-Read
+  - Индексация: bloom filter, bucket index, HBase index
+  - Incremental Query, Time Travel
+  - Clustering и compaction
+  - Встроенная обработка CDC
+- **Lakehouse Architecture**
+  - Концепция Lakehouse: единое хранилище для всех типов нагрузок
+  - Медальонная архитектура (Bronze, Silver, Gold) на Spark + Delta/Iceberg
+  - Построение многослойных пайплайнов с инкрементальной загрузкой
+  - Управление качеством данных в каждом слое
+- **Инструменты разработки и тестирования**
+  - Локальная разработка: `spark-submit`, Jupyter, Zeppelin, Databricks Notebooks
+  - Юнит-тестирование:
+    - `chispa` (PySpark assertions)
+    - `spark-testing-base` (Scala)
+    - `pytest` с фикстурами локального SparkSession
+  - Интеграционное тестирование с контейнерами (Testcontainers, MinIO для S3)
+  - Отладка: чтение DAG, анализ логов драйвера и экзекьюторов, History Server
+  - CI/CD для Spark: сборка fat JAR, упаковка PySpark, пайплайны в GitLab/GitHub Actions
+- **Безопасность**
+  - Аутентификация: Kerberos, токены, OAuth2
+  - Авторизация: политики через Ranger/Sentry, SQL standard
+  - Шифрование: на диске (HDFS encryption zone, TDE), в сети (TLS/SSL)
+  - Безопасность на уровне строк и столбцов, динамическое маскирование
+  - Безопасность в облаке: IAM роли, VPC, приватные соединения
+- **Мониторинг и observability**
+  - Spark UI глубоко: вкладки Stages (input size, shuffle read/write, GC time), Storage, SQL, Executors
+  - History Server: настройка, очистка, сохранение логов событий (S3, HDFS)
+  - Метрики: Prometheus PushGateway, Graphite, Ganglia
+  - Настройка Spark Listeners для кастомного сбора метрик
+  - Оповещения и дашборды (Grafana)
+  - Агрегация логов драйверов и экзекьюторов (EFK, ELK, Splunk)
+- **Управление зависимостями**
+  - Fat JAR для Scala (Maven Shade, sbt-assembly), разрешение конфликтов
+  - `--py-files`, `--archives`, `--jars` для PySpark
+  - `--packages` (координаты Maven)
+  - Проблемы конфликта версий Spark-зависимостей и классовых путей
+
 </details>
 
 <details>
 <summary>
 
-### 6. Эксплуатация и инжиниринг данных (Data Engineering Ops)
+### 6. Эксплуатация и Data Engineering Ops
 </summary>
 
-- Оркестрация Spark-задач (Workflow Orchestration)
-  - Apache Airflow: DAG для Spark-задач (SparkSubmitOperator, SparkJDBCOperator)
-  - Apache Oozie: (устаревший, но legacy)
-  - Databricks Workflows / Azure Data Factory / AWS Step Functions
-  - Управление зависимостями между задачами, повторные попытки, оповещения
-- CI/CD для кода Spark
-  - Тестирование кода в CI-пайплайне (GitLab CI, GitHub Actions, Jenkins)
-  - Автоматизация сборки и деплоя JAR-файлов или PySpark-пакетов
-- Управление инфраструктурой (IaC)
-  - Развертывание Spark-кластеров через Terraform, CloudFormation
-  - Управление кластерами на Kubernetes (Spark-on-k8s operator)
-  - Облачные managed-сервисы: Amazon EMR, Google Cloud Dataproc, Azure HDInsight, Databricks
-- Качество данных (Data Quality)
-  - Проверка данных в пайплайнах: `Great Expectations`, `Deequ` (библиотека от Amazon)
-  - Обработка "плохих" записей (bad records)
-- Управление схемой данных (Schema Management)
-  - Регистр схем (Schema Registry) для Avro/JSON
-  - Эволюция схемы в Delta Lake / Iceberg
-- Выбор формата хранения и партиционирования
-  - Стратегии для различных типов запросов (OLAP)
-  - Оптимизация стоимости в облаке (S3 vs HDD vs SSD)
+- **Оркестрация задач**
+  - Apache Airflow: SparkSubmitOperator, датчики файлов, DAG-зависимости
+  - Databricks Workflows, Azure Data Factory, AWS Step Functions
+  - Управление расписаниями, повторные попытки, оповещения
+  - Параметризация заданий (передача дат, окружений)
+- **CI/CD для Spark-приложений**
+  - Автоматическая сборка и тестирование в PR
+  - Версионирование артефактов (JAR, Python wheel)
+  - Деплой в разные среды (Dev → Staging → Prod)
+  - Canary-запуски, откат версий
+- **Управление инфраструктурой (IaC)**
+  - Развёртывание Spark-кластеров через Terraform, CloudFormation, Bicep
+  - Kubernetes: Spark-on-k8s operator, настройка pod template, GPU/FPGA
+  - Мультитенантные кластеры, очереди YARN/Fair Scheduler, изоляция ресурсов
+- **Качество данных**
+  - Библиотеки: Deequ (Scala), Great Expectations (Python), PyDeequ
+  - Валидация данных в пайплайне: ожидания, метрики, профилирование
+  - Обработка “плохих” записей (bad records): сохранение в отдельную таблицу, dead letter queue
+  - Мониторинг дрейфа данных и схемы
+- **Управление схемой данных**
+  - Schema Registry (Apicurio, Confluent) для Avro/Protobuf
+  - Эволюция схемы в Spark: mergeSchema, overwriteSchema, Delta/Iceberg schema evolution
+- **Архивирование и жизненный цикл данных**
+  - Time Travel для восстановления на определённый момент
+  - Expire snapshots, Vacuum
+  - Перемещение данных по storage tier (hot/warm/cold) в облаке
+- **Оптимизация стоимости**
+  - Spot/Preemptible инстансы, настройка failover
+  - Автомасштабирование кластеров под нагрузку
+  - Выбор правильного формата хранения и степени сжатия
+  - Мониторинг затрат на уровне заданий (теги, метрики)
+
 </details>
 
 <details>
@@ -290,52 +347,65 @@
 ### 7. Паттерны проектирования и лучшие практики
 </summary>
 
-- ETL паттерны (Extract, Transform, Load)
-  - Инкрементальная загрузка
-  - Медленно меняющиеся измерения (SCD Type 1, 2) в Spark
-  - Обработка дубликатов (дедупликация)
-- Паттерны для стриминга
-  - Обогащение стрима статическими/динамическими данными (stream-stream join, stream-static join)
-  - Обработка опаздывающих событий
-  - Обеспечение idempotent записи в приемники
-- Антипаттерны Spark (Чего НЕ надо делать)
-  - Использование `collect()` на больших данных
-  - Группировка по ключу с огромным перекосом
-  - Чтение огромного количества мелких файлов
-  - Создание большого числа мелких партиций
-  - Использование UDF, когда есть встроенная функция
-  - Неправильная настройка количества shuffle-партиций
-- Организация кода и модульность
-  - Структура проектов на Scala (sbt, assembly)
-  - Структура проектов на PySpark (пакеты, конфиги, модули с трансформациями)
-  - Использование конфигурационных файлов (JSON, YAML) для параметров приложения
-- Версионирование кода и данных
-  - Git для кода
-  - Data Version Control (DVC) или возможности озер данных (time travel) для версионирования данных
+- **ETL/ELT паттерны**
+  - Полная и инкрементальная загрузка (по дате, по watermark, CDC)
+  - Медленно меняющиеся измерения (SCD Type 1, 2) на Spark
+  - Дедупликация записей (полная и в потоке)
+  - Upsert-паттерны с использованием Delta Merge
+- **Потоковые паттерны**
+  - Обогащение потока статическими или потоковыми данными (stream-table join, stream-stream join)
+  - Обработка запоздалых событий и пересчёт итогов
+  - Идемпотентная запись в приёмники (checkpoint + уникальный идентификатор)
+  - Паттерн “dead letter queue” для некорректных сообщений
+- **Антипаттерны (чего НЕ делать)**
+  - `collect()` на больших объёмах → драйвер OOM
+  - `groupByKey` вместо `reduceByKey`
+  - Чтение множества мелких файлов без предварительного слияния
+  - Создание огромного числа мелких партиций (и наоборот)
+  - Злоупотребление UDF при наличии встроенных функций
+  - Неправильный уровень кэширования или отсутствие кэша для повторно используемых данных
+  - Использование shuffle без необходимости
+- **Организация кода**
+  - Структура PySpark-проекта: конфиги (YAML), трансформации как чистые функции, джобы как скрипты
+  - Scala проект: sbt, структура пакетов, внедрение конфигураций (Typesafe Config)
+  - Повторное использование логики через библиотеки
+  - Логирование и обработка ошибок в production-коде
+- **Версионирование кода и данных**
+  - Git Flow/Trunk-based для кода
+  - DVC (Data Version Control) или встроенные возможности Delta/Iceberg для версионирования данных
+- **Паттерны Lakehouse**
+  - Medallion (бронза → серебро → золото) с пошаговым улучшением качества
+  - Обработка персональных данных: GDPR-удаление, маскирование
+
 </details>
 
 <details>
 <summary>
 
-### 8. Собеседование и дополнительные знания для Senior-уровня
+### 8. Собеседование и уровень Senior
 </summary>
 
-- Типичные вопросы на собеседовании
-  - Расскажите про архитектуру Spark
-  - В чем разница между DataFrame и RDD?
-  - Как работает Catalyst Optimizer?
-  - Что такое Shuffle? Как его избежать?
-  - Как вы будете оптимизировать медленный join?
-  - Что такое AQE и как оно помогает?
-  - Как бы вы обработали перекос данных (data skew)?
-- Практические кейсы (System Design)
-  - Проектирование пайплайна для обработки кликстрима в реальном времени (миллионы событий/сек)
-  - Построение озера данных для компании с множеством отделов и разнородными данными
-  - Миграция ETL с хранилища на озеро данных
-  - Обеспечение exactly-once обработки в стриминговом пайплайне
-- Тренды и будущее
-  - Project Zen (улучшение PySpark)
-  - Spark Connect (клиент-серверная архитектура)
-  - Развитие Lakehouse форматов (Iceberg, Hudi, Delta)
-  - Интеграция с LLM и генеративным AI
+- **Типичные вопросы (с фокусом на глубокое понимание)**
+  - Расскажите об архитектуре Spark: что происходит при `spark.sql("...").show()`?
+  - RDD vs DataFrame vs Dataset — что использовать и когда?
+  - Как работает Catalyst Optimizer? Приведите примеры правил.
+  - Что такое shuffle и как его минимизировать? Отличие reduceByKey от groupByKey.
+  - Стратегии join-ов, как Spark выбирает план, что такое CBO?
+  - AQE: как работает, какие проблемы решает?
+  - Data Skew: методы диагностики и решения (salting, AQE, join hints).
+  - Как устроена работа с памятью в Tungsten? Что такое off-heap?
+  - Как добиться exactly-once в Structured Streaming?
+- **Практические кейсы (System Design)**
+  - Спроектируйте пайплайн потоковой обработки кликстрима с гарантией exactly-once и задержкой < 1 сек.
+  - Постройте озеро данных компании с 200+ источниками, обеспечьте качество, безопасность и самообслуживание.
+  - Миграция ETL с классического DWH (Teradata/Redshift) на Spark Lakehouse.
+  - Обработка CDC из реляционных БД (Debezium → Kafka → Spark) с обновлением витрин.
+  - Архитектура для переобучения ML-моделей на Spark и развёртывания в production.
+- **Тренды и развитие**
+  - Spark Connect: клиент-серверный API, преимущества для data engineering.
+  - Project Zen: улучшения PySpark, упрощение разработки.
+  - Lakehouse-форматы: Iceberg v2, Hudi 1.0, Delta 3.0 — сравнение и тренды.
+  - Spark + LLM: интеграция с трансформерами, инференс на больших данных, векторные представления.
+  - Spark на Kubernetes: запуск и мониторинг в production, Spark Operator.
+
 </details>
