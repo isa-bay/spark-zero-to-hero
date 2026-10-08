@@ -3,409 +3,2351 @@
 <details>
 <summary>
 
-### 1. Фундамент
+  ### 1. Фундамент
 </summary>
 
-- **Введение в Spark**
-  - Проблемы традиционной обработки данных (MapReduce)
-  - Что такое Apache Spark?
-  - История создания и философия
-  - Области применения и версии Spark
-  - Плюсы и минусы Spark, сравнение с альтернативами (Flink, Trino)
-- **Установка и настройка**
-  - Локальная установка (Windows, macOS, Linux)
-  - Настройка Spark в Docker-контейнере
-  - Подключение к облачным сервисам (EMR, Dataproc, HDInsight)
-  - Сборка из исходников и подключение Spark к IDE (IntelliJ, VSCode)
-  - Типовые конфигурационные файлы (spark-defaults.conf, log4j.properties)
-- **Архитектура кластера**
-  - Компоненты: Driver, Executor, Cluster Manager
-  - Жизненный цикл Driver и Executor
-  - Задачи (Tasks), стадии (Stages), этапы (Jobs)
-  - Режимы развёртывания (client vs cluster)
-  - Динамическое выделение ресурсов (Dynamic Allocation) — обзор
-- **Архитектура приложения**
-  - SparkContext, SparkSession, SparkConf
-  - Spark UI и History Server
-  - Логирование и конфигурирование для разных окружений (dev/stage/prod)
-- **Основные абстракции данных**
-  - **RDD**
-    - Понятие, неизменяемость, отказоустойчивость (lineage)
-    - Создание (parallelize, из внешних источников)
-    - Трансформации (map, filter, flatMap, mapPartitions и др.) и действия (reduce, collect, count и др.)
-    - Узкие и широкие зависимости, влияние на shuffle
-  - **DataFrame**
-    - Отличие от RDD: Catalyst, Tungsten, бестиповый API
-    - Схема (StructType) и её задание
-    - Реляционные операции
-  - **Dataset**
-    - Типобезопасность, энкодеры (Encoders)
-    - Сочетание преимуществ RDD и DataFrame
-  - **Сравнение RDD, DataFrame, Dataset** — когда что выбирать
-- **Физическое исполнение**
-  - Жизненный цикл запроса: парсинг → анализ → оптимизация → физический план → генерация кода → выполнение
-  - Catalyst Optimizer: логические и физические правила
-  - Tungsten: управление памятью вне кучи, кодогенерация целых стадий (Whole-Stage CodeGen)
-  - Predicate pushdown и column pruning
-- **Менеджеры кластеров**
-  - Standalone (простой, встроенный)
-  - Hadoop YARN (интеграция с Hadoop)
-  - Mesos (историческая справка)
-  - Kubernetes (современный стандарт, Spark Operator, поды)
-  - Сравнение: выбор менеджера под задачу
-- **Системы хранения**
-  - Подключение к HDFS, S3 (s3a), ADLS, GCS, локальной FS
-  - Важность локальности данных (Data Locality) и настройки `spark.locality.wait`
-  - Поддержка облачных объектных хранилищ: консистентность, коммиттеры (S3A Committer, Magic Committer)
+- [Введение в Apache Spark]()
+  - [Что такое Apache Spark и какие задачи он решает]()
+  - [История Spark и развитие проекта Apache]()
+  - [Пакетная, потоковая и интерактивная обработка данных]()
+  - [Spark как вычислительный движок и его место в платформе данных]()
+  - [Области применения: ETL/ELT, аналитика, машинное обучение и графы]()
+  - [Преимущества, ограничения и стоимость распределённых вычислений]()
+  - [Когда достаточно SQL-базы, pandas, Polars или DuckDB]()
+  - [Сравнение Spark, Hadoop MapReduce, Flink и Trino по типам задач]()
+- [Предварительные знания]()
+  - [Основы Python либо Scala/Java для выбранного API]()
+  - [SQL, реляционная модель и операции над таблицами]()
+  - [Файлы, процессы, переменные окружения и работа в терминале]()
+  - [Основы JVM и различие JVM-процесса и Python-процесса]()
+  - [CPU, RAM, диски и сеть как ресурсы обработки данных]()
+  - [Основы распределённых систем: задержки, частичные отказы и повторные попытки]()
+- [Компоненты и API Spark]()
+  - [Spark Core и Spark SQL]()
+  - [DataFrame, Dataset и RDD: назначение и доступность в языках]()
+  - [Structured Streaming и его связь со Spark SQL]()
+  - [MLlib, GraphX и внешние библиотеки экосистемы]()
+  - [PySpark, Scala API, Java API и SQL]()
+  - [Spark Classic и Spark Connect: обзор способов подключения]()
+  - [Встроенные возможности Spark и возможности внешних платформ]()
+- [Версии и совместимость окружения]()
+  - [Ветки Spark, release notes и документация конкретной версии]()
+  - [Совместимость Spark с Java, Scala, Python и Hadoop]()
+  - [Совместимость PySpark с pandas, NumPy и PyArrow]()
+  - [Бинарная версия Scala и координаты JVM-зависимостей]()
+  - [Различия Apache Spark и дистрибутивов управляемых платформ]()
+  - [Фиксация версий для воспроизводимого обучения]()
+- [Установка и настройка окружения]()
+  - [Установка JDK и проверка JAVA_HOME и PATH]()
+  - [Установка Spark из дистрибутива и PySpark через менеджер пакетов]()
+  - [Виртуальное окружение Python и изоляция зависимостей]()
+  - [Локальная установка в Linux, macOS, Windows и WSL]()
+  - [Окружение в Docker и доступ к каталогам данных]()
+  - [Настройка VS Code, PyCharm и IntelliJ IDEA]()
+  - [Jupyter и notebooks для интерактивных экспериментов]()
+  - [Проверка установки и типичные проблемы запуска]()
+- [Первое приложение]()
+  - [Создание SparkSession и указание имени приложения]()
+  - [Локальные режимы local, local[N] и local[*]]()
+  - [Создание DataFrame и чтение небольшого файла]()
+  - [Первая трансформация и первое действие]()
+  - [Первый SQL-запрос и запись результата]()
+  - [Открытие Spark UI и просмотр выполненного задания]()
+  - [Завершение SparkSession и освобождение ресурсов]()
+- [Способы запуска]()
+  - [Интерактивные оболочки pyspark, spark-shell и spark-sql]()
+  - [Запуск приложения через spark-submit]()
+  - [Запуск локального PySpark-кода из Python и IDE]()
+  - [Notebooks, удалённые сессии и подключение через Spark Connect]()
+  - [Аргументы приложения и параметры Spark]()
+  - [Различие локального запуска и запуска на кластере]()
+- [Базовые правила работы со Spark]()
+  - [Преобразования данных вместо построчных циклов на драйвере]()
+  - [Ограниченный просмотр данных вместо выгрузки всего набора]()
+  - [Явная схема и контроль типов с первого дня]()
+  - [Чистые преобразования и отделение чтения от записи]()
+  - [Проверка результата на небольшом наборе данных]()
+  - [Чтение сообщений об ошибках и документации API]()
 
 </details>
 
 <details>
 <summary>
 
-### 2. API и работа с данными
+  ### 2. Архитектура и модель распределённого выполнения
 </summary>
 
-- **Spark SQL**
-  - Создание таблиц и представлений (временные, глобальные, перманентные)
-  - Интеграция с Hive Metastore
-  - Выполнение SQL-запросов (`spark.sql`)
-  - Взаимодействие DataFrame и SQL
-  - Встроенные функции (строковые, математические, агрегатные)
-  - `cube`, `rollup`, `grouping sets` для многомерных отчётов
-- **DataFrame API**
-  - Базовые операции: select, withColumn, drop, filter/where, distinct
-  - Агрегации: groupBy, agg, pivot
-  - Типы join: inner, outer, left, right, semi, anti; cross join
-  - Union, intersect, except
-  - Работа со сложными типами:
-    - StructType / StructField
-    - ArrayType (explode, posexplode, array_contains, filter, transform)
-    - MapType (keys, values, explode)
-    - JSON: from_json, to_json, get_json_object, schema_of_json
-  - Обработка null: fill, drop, replace; функции coalesce, ifnull, isnull, nanvl, when
-  - Оконные функции:
-    - Определение окна (partitionBy, orderBy, rowsBetween/rangeBetween)
-    - Ранжирующие: row_number, rank, dense_rank, percent_rank, ntile
-    - Аналитические: lead, lag, first_value, last_value
-    - Агрегатные функции с окнами
-- **RDD API (для legacy и низкоуровневых операций)**
-  - Трансформации: map, flatMap, filter, mapPartitions, mapPartitionsWithIndex, glom
-  - PairRDD: groupByKey, reduceByKey, aggregateByKey, combineByKey, sortByKey
-  - Действия: reduce, fold, aggregate, collect, count, take, top, foreach, foreachPartition
-  - Накопители (Accumulators) и широковещательные переменные (Broadcast Variables)
-  - Сохранение RDD в файлы (saveAsTextFile, saveAsObjectFile)
-- **Работа с датой и временем**
-  - Парсинг: to_date, to_timestamp, unix_timestamp
-  - Извлечение компонентов: year, month, day, hour, minute, second
-  - Арифметика: date_add, date_sub, datediff, months_between, add_months
-  - Работа с временными зонами: from_utc_timestamp, to_utc_timestamp
-- **Пользовательские функции (UDF)**
-  - UDF: регистрация, ограничения (чёрный ящик для Catalyst)
-  - UDAF (агрегатные функции) – через Aggregator API
-  - Pandas UDF (векторизованные): Series → Series, Iterator of Series → Iterator of Series
-  - Pandas Function APIs: groupby().applyInPandas(), mapInPandas()
-  - PySpark UDF vs Pandas UDF: когда что применять
-  - UDF в Scala/Java и рекомендации по производительности
-- **Дополнительные API**
-  - Чтение/запись через JDBC: параллелизация, настройка fetchsize, batchsize
-  - Работа с бинарными данными и схемами Avro
-  - Статистические функции: summary, approxQuantile, corr, crosstab, sampleBy
+- [Архитектура приложения]()
+  - [Driver, Executors и Cluster Manager]()
+  - [Рабочие узлы, процессы и доступные вычислительные ресурсы]()
+  - [SparkContext, SparkSession и SparkConf]()
+  - [Жизненный цикл приложения, драйвера и исполнителей]()
+  - [Client mode и cluster mode]()
+  - [Где исполняется пользовательский код и где находятся данные]()
+- [Распределённые коллекции]()
+  - [Партиция как единица распределения данных]()
+  - [Партиция, файл, блок хранения и task: различие понятий]()
+  - [Неизменяемость DataFrame, Dataset и RDD]()
+  - [Распределённый набор данных и локальная коллекция]()
+  - [Логическое представление данных и физическое размещение]()
+  - [Отсутствие общего порядка строк без явной сортировки]()
+- [Ленивые вычисления]()
+  - [Трансформации и действия]()
+  - [Построение плана без немедленной обработки данных]()
+  - [Что запускает вычисления и какие операции выполняют предварительную работу]()
+  - [Повторное вычисление при нескольких действиях]()
+  - [Ошибки построения плана и ошибки во время выполнения]()
+  - [Побочные эффекты в ленивом и повторяемом вычислении]()
+- [Jobs, Stages и Tasks]()
+  - [DAG вычислений и зависимости операций]()
+  - [Job как задание, Stage как стадия и Task как задача]()
+  - [Узкие и широкие зависимости]()
+  - [Границы стадий и обмен данными между ними]()
+  - [Попытки задачи и попытки стадии]()
+  - [Связь SQL execution, jobs и физических операторов]()
+- [Драйвер и передача пользовательского кода]()
+  - [Построение планов и планирование задач на драйвере]()
+  - [Замыкания и сериализация захваченных переменных]()
+  - [Отправка функций и зависимостей исполнителям]()
+  - [Почему локальные изменения объектов не изменяют состояние драйвера]()
+  - [Почему SparkSession и SparkContext нельзя использовать внутри executor-функций]()
+  - [Драйвер как возможное узкое место приложения]()
+- [Локальность данных и сетевой обмен]()
+  - [Process-local, node-local, rack-local и другие уровни локальности]()
+  - [Локальность при работе с HDFS и объектными хранилищами]()
+  - [Сетевые затраты чтения, broadcast и shuffle]()
+  - [Ожидание локальности и компромисс с загрузкой ресурсов]()
+  - [Пропускная способность и задержка распределённого вычисления]()
+- [Отказоустойчивость вычислений]()
+  - [Lineage и восстановление потерянных партиций]()
+  - [Повторные попытки задач и пересчёт стадий]()
+  - [Потеря executor и потеря driver: разные последствия]()
+  - [Heartbeats и обнаружение недоступности исполнителя]()
+  - [Недетерминированные функции и повторное выполнение]()
+  - [Почему успешное вычисление не гарантирует однократный внешний эффект]()
+- [Параллелизм и ограничения масштабирования]()
+  - [Число партиций, task slots и одновременно выполняемых задач]()
+  - [Параллелизм данных и параллелизм независимых заданий]()
+  - [Накладные расходы запуска задач и слишком маленькие партиции]()
+  - [Горячие ключи, медленные задачи и неравномерная нагрузка]()
+  - [Последовательные участки вычисления и закон Амдала]()
+  - [Различие горизонтального и вертикального масштабирования]()
 
 </details>
 
 <details>
 <summary>
 
-### 3. Оптимизация и тонкая настройка
+  ### 3. DataFrame, схемы и типы данных
 </summary>
 
-- **Понимание планов запросов**
-  - Чтение и интерпретация `explain()` (включая формат `formatted`, `cost`, `codegen`)
-  - Разница между логическим и физическим планом
-  - Анализ узких мест: Exchange, Sort, BroadcastExchange
-  - Использование DAG визуализации в Spark UI
-- **Партиционирование**
-  - Понятие партиции, факторы, влияющие на их количество
-  - `repartition()` (полный shuffle) vs `coalesce()` (сужение без shuffle)
-  - `spark.sql.shuffle.partitions`, `spark.default.parallelism`
-  - Партиционирование при записи (`partitionBy`), последствия для small files
-  - Бакетирование (Bucketing): создание, использование при join, ограничения
-  - Диапазонное и хэш-партиционирование
-- **Управление памятью**
-  - Архитектура памяти Executor: On-Heap и Off-Heap (Tungsten)
-  - Области памяти: Execution, Storage, Reserved, User Memory
-  - `spark.memory.fraction`, `spark.memory.storageFraction`
-  - Настройка GC: G1GC, Parallel GC, мониторинг пауз через Spark UI / jstat
-  - Spill to disk: причины, влияние, минимизация
-  - OutOfMemoryError: диагностика по логам и UI, типовые решения
-  - Настройка числа ядер и памяти исполнителей (executor-cores, executor-memory)
-- **Кэширование и сохранение**
-  - `cache()` vs `persist()`, уровни хранения (MEMORY_ONLY, MEMORY_AND_DISK, etc.)
-  - Сериализация в кэше (Kryo)
-  - Checkpointing: разрыв lineage, запись на надёжное хранилище, отличие от persist
-  - Когда кэшировать, а когда нет (анализ lineage, многократное использование)
-- **Оптимизация Shuffle**
-  - Почему shuffle дорог: сетевой обмен, диск, сериализация
-  - Map-side combine (reduceByKey vs groupByKey)
-  - Настройка буферов: `spark.reducer.maxSizeInFlight`, `spark.shuffle.file.buffer`
-  - Сжатие shuffle: `spark.shuffle.compress`, `spark.io.compression.codec`
-  - Data Skew (перекос данных):
-    - Обнаружение перекоса через Spark UI (размер задач, время выполнения)
-    - Техники борьбы: salting ключей, разделение ключей на горячие/холодные, AQE Skew Join Optimization
-  - Speculative Execution: борьба с медленными задачами
-- **Join-оптимизации**
-  - Стратегии: Broadcast Hash Join, Sort Merge Join, Shuffled Hash Join, Cartesian Join
-  - Как Spark выбирает стратегию (cost-based оптимизатор CBO, сбор статистики)
-  - `spark.sql.autoBroadcastJoinThreshold`, хинт `/*+ BROADCAST(t) */`
-  - Оптимизация при перекосе данных в join: salt, AQE Dynamic Optimize Skew Join
-  - Bucket Join: преимущества и требования
-  - Оптимизация сбора статистики таблиц (`ANALYZE TABLE`)
-- **Настройка сериализации**
-  - Java serialization (медленно, громоздко)
-  - Kryo serialization: включение, регистрация классов, `spark.kryo.registrationRequired`
-- **Адаптивное выполнение (AQE)**
-  - Основные фичи: динамическое слияние shuffle-партиций, динамическая смена стратегии join, оптимизация перекоса
-  - Настройка и мониторинг AQE
-- **Динамическое выделение ресурсов**
-  - Принцип работы: освобождение idle executor-ов, запрос новых
-  - Настройка для YARN, Kubernetes
-  - Взаимодействие с shuffle-файлами и внешним shuffle-сервисом
-- **Работа с маленькими файлами**
-  - Проблема “small files” на чтении и записи
-  - Компактирование файлов (Spark job, Delta Optimize, Hudi Clustering)
-  - Настройка `maxRecordsPerFile` при записи
-  - Коалесценция перед записью
+- [Основы DataFrame]()
+  - [Строки, столбцы, схема и объект Row]()
+  - [Создание DataFrame из локальных данных, файлов и таблиц]()
+  - [Создание тестовых данных через range]()
+  - [columns, schema, dtypes и printSchema]()
+  - [show, head, first, take и limit]()
+  - [count, isEmpty и стоимость проверки наличия данных]()
+  - [Почему DataFrame Spark отличается от pandas DataFrame]()
+- [Описание схемы]()
+  - [StructType и StructField]()
+  - [Схема в DDL-формате и JSON-представлении]()
+  - [Вывод схемы и его стоимость и ограничения]()
+  - [Явная схема и проверка входных данных]()
+  - [nullable, containsNull и valueContainsNull]()
+  - [Metadata полей и сохранение метаданных при преобразованиях]()
+  - [Соответствие схемы внешнему контракту данных]()
+- [Примитивные типы]()
+  - [BooleanType и целочисленные типы]()
+  - [FloatType и DoubleType]()
+  - [DecimalType: precision, scale и денежные вычисления]()
+  - [StringType и BinaryType]()
+  - [DateType, TimestampType и TimestampNTZType]()
+  - [Интервальные типы]()
+  - [NullType и пустые или полностью NULL-столбцы]()
+  - [Типы и возможности, зависящие от версии Spark]()
+- [Сложные и полуструктурированные типы]()
+  - [StructType и вложенные структуры]()
+  - [ArrayType и массивы вложенных объектов]()
+  - [MapType, ограничения ключей и значения]()
+  - [Доступ к полям структур, элементам массивов и карт]()
+  - [Вложенная nullability и отсутствующие поля]()
+  - [VariantType и отличие VARIANT от строки с JSON]()
+  - [Пользовательские типы UDT и совместимость API]()
+- [Column и система выражений]()
+  - [Column как выражение, а не локальное значение]()
+  - [col, lit, expr и ссылки на столбцы]()
+  - [alias и разрешение имён]()
+  - [Арифметические, логические и сравнительные выражения]()
+  - [Скобки, приоритет операторов и условия в PySpark]()
+  - [Имена с точками, пробелами и экранирование идентификаторов]()
+  - [Регистр имён и spark.sql.caseSensitive]()
+- [Преобразование типов]()
+  - [cast, try_cast и явное приведение типов]()
+  - [Неявные преобразования и поиск общего типа]()
+  - [Переполнение, потеря точности и несовместимые значения]()
+  - [ANSI mode и политика присваивания типов]()
+  - [Безопасный разбор чисел, дат и логических значений]()
+  - [Различия типов Spark, Python, pandas, Arrow и JVM]()
+- [NULL, NaN и трёхзначная логика]()
+  - [NULL, None, NaN и пустая строка]()
+  - [TRUE, FALSE и UNKNOWN в SQL-условиях]()
+  - [isNull, isNotNull и null-safe equality]()
+  - [Сравнение, сортировка, группировка и соединение NULL-значений]()
+  - [isnan и особенности NaN в Spark SQL]()
+  - [Nullable-схема и фактическое наличие пропусков]()
+  - [NULL в агрегатах, массивах и условных выражениях]()
+- [Изменение схемы DataFrame]()
+  - [Добавление, переименование и удаление столбцов]()
+  - [Порядок полей и приведение к целевой схеме]()
+  - [Обновление вложенных полей через withField и dropFields]()
+  - [Совместимость схем при объединении наборов данных]()
+  - [Схема DataFrame и эволюция схемы сохранённой таблицы]()
+  - [Новые, удалённые и изменившие тип поля]()
 
 </details>
 
 <details>
 <summary>
 
-### 4. Экосистема и интеграции
+  ### 4. Преобразования DataFrame и встроенные функции
 </summary>
 
-- **Spark Streaming**
-  - **DStream** (устаревший, ознакомительно): создание, операции с окнами
-  - **Structured Streaming**
-    - Модель бесконечной таблицы и программирование как над статическим DataFrame
-    - Режимы вывода: Append, Update, Complete
-    - Триггеры: Processing time, Event time, Once, Continuous
-    - Водяные знаки (Watermarking) и обработка поздних событий
-    - Exactly-once семантика: чекпоинтинг, WAL, идемпотентные приёмники
-    - Stateful-обработка: mapGroupsWithState, flatMapGroupsWithState
-    - Соединения: stream-static и stream-stream join
-    - Дедупликация событий (dropDuplicates с watermark)
-    - Интеграция с Kafka: источники, смещения (offsets), стратегии сброса, SASL/SSL
-    - Продвинутые приёмники: foreachBatch, Cassandra, Delta, Iceberg
-    - Режим continuous processing (особенности и ограничения)
-- **Spark MLlib**
-  - Pipeline API: Transformer, Estimator, Evaluator, PipelineModel
-  - Feature Engineering:
-    - Векторизация: VectorAssembler, CountVectorizer, TF-IDF
-    - Нормализация: StandardScaler, MinMaxScaler
-    - Кодирование категориальных признаков: StringIndexer, OneHotEncoder, Bucketizer
-    - Обработка пропусков: Imputer
-  - Алгоритмы: логистическая регрессия, случайный лес, градиентный бустинг, K-means
-  - Кросс-валидация и подбор гиперпараметров
-  - Сохранение и загрузка моделей (MLeap, PMML)
-  - Feature Store: концепция и интеграция с Spark (Feast, Databricks Feature Store)
-- **GraphX / GraphFrames**
-  - Абстракции: Graph, VertexRDD, EdgeRDD, GraphFrame
-  - Алгоритмы: PageRank, Connected Components, Label Propagation
-  - Операторы: aggregateMessages, motif finding
-  - GraphFrames: преимущества перед GraphX (DataFrame-based API)
-- **Глубокое обучение**
-  - TensorFlow on Spark (Horovod, TFoS)
-  - PyTorch и Spark (TorchDistributor, SparkTorch)
-  - Ускорение инференса с Pandas UDF
-- **Языки программирования**
-  - Scala: нативный язык, максимальная производительность, implicit encoders
-  - PySpark: Python API, Pandas UDF, Arrow-оптимизации
-  - SparkR, Java – обзор
-  - SQL как универсальный интерфейс
-  - Выбор языка под задачу и команду
-- **Форматы данных**
-  - CSV, JSON: плюсы, минусы, настройки парсинга (опция `mode` для bad records)
-  - Parquet: колоночное хранение, сжатие, предикатный пушдаун, схема эволюции
-  - Avro: row-based, интеграция со Schema Registry
-  - ORC: оптимизирован для Hive, преимущества
-  - Сравнение Parquet vs Avro vs ORC, выбор для слоёв данных (raw vs processed)
-- **Облачные интеграции**
-  - Amazon EMR, Google Dataproc, Azure HDInsight: особенности настройки, работа с объектными хранилищами
-  - Databricks: управляемый Spark, Delta Lake, Workflows, SQL Analytics
-  - Serverless Spark (AWS Glue, Google Dataproc Serverless)
+- [Выбор и изменение столбцов]()
+  - [select, selectExpr и выбор вложенных полей]()
+  - [withColumn, withColumns и построение нескольких выражений]()
+  - [withColumnRenamed, withColumnsRenamed, toDF и drop]()
+  - [Выбор столбцов по схеме, типу и правилу именования]()
+  - [Почему длинные цепочки withColumn увеличивают план]()
+  - [DataFrame.transform для композиции преобразований]()
+- [Фильтрация и условные выражения]()
+  - [filter и where с Column и SQL-выражением]()
+  - [when, otherwise, CASE и условное присваивание]()
+  - [isin, between, like, ilike и rlike]()
+  - [Сочетание условий и обработка UNKNOWN]()
+  - [Проверка нескольких правил в одном проходе]()
+  - [Отсутствие гарантии короткого замыкания для пользовательских функций]()
+- [Очистка и нормализация]()
+  - [na.fill, na.drop и na.replace]()
+  - [coalesce как SQL-функция выбора ненулевого значения]()
+  - [nullif, ifnull, nvl, nvl2 и nanvl]()
+  - [Нормализация пробелов, регистра и специальных значений]()
+  - [Сохранение исходного значения и причины ошибки]()
+  - [Очистка без скрытой потери строк и точности]()
+- [Строковые функции и регулярные выражения]()
+  - [concat, concat_ws, substring и split]()
+  - [length, trim, lpad, rpad, upper и lower]()
+  - [replace, translate, regexp_replace и regexp_extract]()
+  - [Поиск позиций, шаблонов и извлечение нескольких совпадений]()
+  - [Регулярные выражения JVM и отличие от Python re]()
+  - [Unicode, кодировки и бинарно-текстовые преобразования]()
+  - [Collations и сравнение строк с учётом версии Spark]()
+- [Числовые, математические и логические функции]()
+  - [abs, sign, ceil, floor, round и bround]()
+  - [Степени, логарифмы, корни и тригонометрические функции]()
+  - [greatest, least и работа с несколькими значениями]()
+  - [Decimal-арифметика, округление и переполнение]()
+  - [Безопасные функции семейства try_*]()
+  - [Побитовые операции и логические преобразования]()
+  - [rand, randn и воспроизводимость случайных значений]()
+- [Дата, время и часовые пояса]()
+  - [to_date, to_timestamp и безопасный парсинг]()
+  - [Шаблоны даты и времени и политика разбора]()
+  - [year, month, day, hour и другие компоненты]()
+  - [date_add, date_sub, add_months, datediff и months_between]()
+  - [date_trunc, trunc и календарные границы]()
+  - [Unix time, единицы измерения и точность timestamp]()
+  - [spark.sql.session.timeZone и интерпретация входных значений]()
+  - [to_utc_timestamp, from_utc_timestamp и двойное смещение]()
+  - [Timestamp с часовым поясом сессии и TimestampNTZ]()
+  - [DST, неоднозначное локальное время и переход через полночь]()
+- [Массивы, карты и структуры]()
+  - [array, struct, named_struct и create_map]()
+  - [size, element_at, get и безопасный доступ к элементам]()
+  - [array_contains, array_distinct, array_union и array_intersect]()
+  - [array_sort, sort_array, reverse, slice и flatten]()
+  - [arrays_zip, sequence и генерация последовательностей]()
+  - [map_keys, map_values, map_entries и map_from_entries]()
+  - [transform, filter, exists, forall, aggregate и zip_with]()
+  - [transform_keys, transform_values, map_filter и map_zip_with]()
+  - [SQL-лямбды высшего порядка и их отличие от Python UDF]()
+- [Разворачивание и перестройка данных]()
+  - [explode, explode_outer, posexplode и posexplode_outer]()
+  - [inline и разворачивание массива структур]()
+  - [Потеря строк с NULL и пустыми массивами]()
+  - [Несколько explode и декартово увеличение числа строк]()
+  - [stack, unpivot и melt с учётом доступности API]()
+  - [Транспонирование и изменение формы набора данных]()
+- [JSON, VARIANT и бинарные функции]()
+  - [from_json, to_json и schema_of_json]()
+  - [get_json_object и json_tuple]()
+  - [Разбор вложенного JSON по явной схеме]()
+  - [parse_json, try_parse_json и функции VARIANT]()
+  - [base64, unbase64, encode, decode, hex и unhex]()
+  - [Хэширование: hash, xxhash64, sha2 и ограничения контрольных сумм]()
+  - [Сериализация Avro и Protobuf через соответствующие модули]()
+- [Сортировка, выборки и идентификаторы]()
+  - [orderBy, sort и sortWithinPartitions]()
+  - [ASC/DESC и NULLS FIRST/NULLS LAST]()
+  - [limit, offset и отсутствие стабильности без полного порядка]()
+  - [sample, sampleBy и randomSplit]()
+  - [monotonically_increasing_id и отсутствие последовательной нумерации]()
+  - [spark_partition_id и зависимость от физического выполнения]()
+  - [Детерминированные ключи и стабильность результата при перераспределении]()
+- [Статистика и исследование данных]()
+  - [describe, summary и интерпретация статистик]()
+  - [corr, cov и crosstab]()
+  - [approxQuantile и приближённые перцентили]()
+  - [freqItems и частотный анализ]()
+  - [Наблюдения через Observation и метрики во время действия]()
+  - [Стоимость многократного профилирования большого набора данных]()
 
 </details>
 
 <details>
 <summary>
 
-### 5. Продвинутые темы и инструменты Data Engineer
+  ### 5. Соединения, агрегации и оконные вычисления
 </summary>
 
-- **Delta Lake (глубокое погружение)**
-  - ACID-транзакции, оптимистическая конкурентность
-  - Time Travel, audit logs, восстановление состояния таблицы
-  - Schema enforcement и evolution
-  - Upsert / Merge: синтаксис, оптимизация, работа с несколькими условиями
-  - Vacuum: очистка старых файлов снапшотов
-  - Delta Log: структура, checkpoints
-  - Оптимизации: Compaction (OPTIMIZE), Z-Ordering, Liquid Clustering
-  - Delta Live Tables (DLT): декларативный ETL, контроль качества данных (expectations)
-  - Change Data Feed (CDF) для CDC-сценариев
-- **Apache Iceberg**
-  - Архитектура: метаданные, манифесты, файлы данных
-  - Преимущества: скрытое партиционирование, эволюция схемы, путешествие во времени
-  - Row-level delete/update (merge-on-read vs copy-on-write)
-  - Интеграция со Spark: чтение, запись, процедуры (rewrite_manifests, expire_snapshots)
-  - Сравнение с Delta Lake и Hudi
-- **Apache Hudi**
-  - Таблицы Copy-on-Write vs Merge-on-Read
-  - Индексация: bloom filter, bucket index, HBase index
-  - Incremental Query, Time Travel
-  - Clustering и compaction
-  - Встроенная обработка CDC
-- **Lakehouse Architecture**
-  - Концепция Lakehouse: единое хранилище для всех типов нагрузок
-  - Медальонная архитектура (Bronze, Silver, Gold) на Spark + Delta/Iceberg
-  - Построение многослойных пайплайнов с инкрементальной загрузкой
-  - Управление качеством данных в каждом слое
-- **Инструменты разработки и тестирования**
-  - Локальная разработка: `spark-submit`, Jupyter, Zeppelin, Databricks Notebooks
-  - Юнит-тестирование:
-    - `chispa` (PySpark assertions)
-    - `spark-testing-base` (Scala)
-    - `pytest` с фикстурами локального SparkSession
-  - Интеграционное тестирование с контейнерами (Testcontainers, MinIO для S3)
-  - Отладка: чтение DAG, анализ логов драйвера и экзекьюторов, History Server
-  - CI/CD для Spark: сборка fat JAR, упаковка PySpark, пайплайны в GitLab/GitHub Actions
-- **Безопасность**
-  - Аутентификация: Kerberos, токены, OAuth2
-  - Авторизация: политики через Ranger/Sentry, SQL standard
-  - Шифрование: на диске (HDFS encryption zone, TDE), в сети (TLS/SSL)
-  - Безопасность на уровне строк и столбцов, динамическое маскирование
-  - Безопасность в облаке: IAM роли, VPC, приватные соединения
-- **Мониторинг и observability**
-  - Spark UI глубоко: вкладки Stages (input size, shuffle read/write, GC time), Storage, SQL, Executors
-  - History Server: настройка, очистка, сохранение логов событий (S3, HDFS)
-  - Метрики: Prometheus PushGateway, Graphite, Ganglia
-  - Настройка Spark Listeners для кастомного сбора метрик
-  - Оповещения и дашборды (Grafana)
-  - Агрегация логов драйверов и экзекьюторов (EFK, ELK, Splunk)
-- **Управление зависимостями**
-  - Fat JAR для Scala (Maven Shade, sbt-assembly), разрешение конфликтов
-  - `--py-files`, `--archives`, `--jars` для PySpark
-  - `--packages` (координаты Maven)
-  - Проблемы конфликта версий Spark-зависимостей и классовых путей
+- [Основы соединения наборов данных]()
+  - [Условие соединения и ключи]()
+  - [Inner, left, right и full outer join]()
+  - [Left semi и left anti join]()
+  - [Cross join и декартово произведение]()
+  - [Соединение по имени столбца и по выражению]()
+  - [Соединение по нескольким ключам]()
+  - [NULL-ключи и null-safe join]()
+- [Корректность join]()
+  - [Связи one-to-one, one-to-many и many-to-many]()
+  - [Размножение строк из-за неуникальных ключей]()
+  - [Alias, self join и неоднозначные имена столбцов]()
+  - [Фильтр в условии ON и фильтр после outer join]()
+  - [Проверка отсутствующих соответствий и полноты обогащения]()
+  - [Контроль cardinality и сверка результата]()
+- [Сложные условия соединения]()
+  - [Non-equi join и соединение по диапазонам]()
+  - [Соединение по временным интервалам]()
+  - [As-of обогащение через доступные операции Spark]()
+  - [Соединение с историей изменений и интервальными справочниками]()
+  - [EXISTS, NOT EXISTS, IN и NOT IN с NULL-значениями]()
+  - [Риск полного перебора при сложном предикате]()
+- [Группировка и агрегатные функции]()
+  - [groupBy и agg]()
+  - [count, count_distinct, sum, avg, min и max]()
+  - [count(*) и count(column): различие для NULL]()
+  - [first, last, collect_list и collect_set]()
+  - [Зависимость порядка collect_list и first/last от выполнения]()
+  - [Условные агрегаты и агрегаты с FILTER]()
+  - [Статистические, логические и побитовые агрегаты]()
+  - [Агрегация пустого набора и групп с NULL]()
+- [Приближённые агрегаты и sketches]()
+  - [approx_count_distinct и допустимая погрешность]()
+  - [percentile, percentile_approx и approx_percentile]()
+  - [Гистограммы и оценка распределения]()
+  - [HyperLogLog и функции sketches при наличии в версии]()
+  - [Объединяемые состояния агрегатов]()
+  - [Компромисс между точностью, памятью и скоростью]()
+- [Многомерные агрегаты и изменение формы]()
+  - [rollup, cube и GROUPING SETS]()
+  - [grouping и grouping_id]()
+  - [Отличие итогового NULL от исходного NULL]()
+  - [pivot с явным списком значений]()
+  - [Стоимость широкого pivot и роста числа групп]()
+  - [Гранулярность отчёта и предотвращение двойного счёта]()
+- [Основы оконных функций]()
+  - [Window, partitionBy, orderBy и over]()
+  - [Оконная партиция и физическая партиция Spark]()
+  - [rowsBetween и rangeBetween]()
+  - [Границы frame и frame по умолчанию]()
+  - [Равные значения сортировки и детерминированный порядок]()
+  - [Окно без partitionBy и концентрация вычисления]()
+- [Ранжирование и аналитические функции]()
+  - [row_number, rank и dense_rank]()
+  - [percent_rank, cume_dist и ntile]()
+  - [lag, lead и значения по умолчанию]()
+  - [first_value, last_value и nth_value]()
+  - [IGNORE NULLS и поддержка конкретными функциями]()
+  - [Top-N по группе и выбор последней записи]()
+- [Агрегаты в окнах и последовательности событий]()
+  - [Накопительные суммы и скользящие агрегаты]()
+  - [Окна по числу строк и по диапазону значений]()
+  - [Сравнение события с предыдущим и следующим]()
+  - [Gaps and islands и выделение последовательностей]()
+  - [Временное сессионное разбиение в batch-данных]()
+  - [Совместное вычисление окон с одинаковыми ключами]()
+- [Операции над множествами и дедупликация]()
+  - [union и unionByName]()
+  - [allowMissingColumns и совместимость вложенных схем]()
+  - [intersect, intersectAll, except и exceptAll]()
+  - [Семантика множества и мультимножества]()
+  - [distinct и dropDuplicates]()
+  - [Почему dropDuplicates не задаёт правило выбора оставшейся строки]()
+  - [Детерминированная дедупликация через окно и критерий приоритета]()
 
 </details>
 
 <details>
 <summary>
 
-### 6. Эксплуатация и Data Engineering Ops
+  ### 6. Spark SQL, таблицы и каталоги
 </summary>
 
-- **Оркестрация задач**
-  - Apache Airflow: SparkSubmitOperator, датчики файлов, DAG-зависимости
-  - Databricks Workflows, Azure Data Factory, AWS Step Functions
-  - Управление расписаниями, повторные попытки, оповещения
-  - Параметризация заданий (передача дат, окружений)
-- **CI/CD для Spark-приложений**
-  - Автоматическая сборка и тестирование в PR
-  - Версионирование артефактов (JAR, Python wheel)
-  - Деплой в разные среды (Dev → Staging → Prod)
-  - Canary-запуски, откат версий
-- **Управление инфраструктурой (IaC)**
-  - Развёртывание Spark-кластеров через Terraform, CloudFormation, Bicep
-  - Kubernetes: Spark-on-k8s operator, настройка pod template, GPU/FPGA
-  - Мультитенантные кластеры, очереди YARN/Fair Scheduler, изоляция ресурсов
-- **Качество данных**
-  - Библиотеки: Deequ (Scala), Great Expectations (Python), PyDeequ
-  - Валидация данных в пайплайне: ожидания, метрики, профилирование
-  - Обработка “плохих” записей (bad records): сохранение в отдельную таблицу, dead letter queue
-  - Мониторинг дрейфа данных и схемы
-- **Управление схемой данных**
-  - Schema Registry (Apicurio, Confluent) для Avro/Protobuf
-  - Эволюция схемы в Spark: mergeSchema, overwriteSchema, Delta/Iceberg schema evolution
-- **Архивирование и жизненный цикл данных**
-  - Time Travel для восстановления на определённый момент
-  - Expire snapshots, Vacuum
-  - Перемещение данных по storage tier (hot/warm/cold) в облаке
-- **Оптимизация стоимости**
-  - Spot/Preemptible инстансы, настройка failover
-  - Автомасштабирование кластеров под нагрузку
-  - Выбор правильного формата хранения и степени сжатия
-  - Мониторинг затрат на уровне заданий (теги, метрики)
+- [Работа через SQL]()
+  - [spark.sql и взаимное использование SQL и DataFrame API]()
+  - [SELECT, WHERE, GROUP BY, HAVING и ORDER BY]()
+  - [CTE, вложенные запросы и set operations]()
+  - [Коррелированные подзапросы и ограничения их поддержки]()
+  - [SQL-выражения, функции и оконные конструкции]()
+  - [Параметризованные запросы и безопасная передача значений]()
+  - [SQL-диалект Spark и отличие от PostgreSQL, Hive и других систем]()
+- [Представления и область видимости]()
+  - [Локальные временные представления]()
+  - [Глобальные временные представления и global_temp]()
+  - [Постоянные представления]()
+  - [Время жизни представления и сессии]()
+  - [Представление, таблица и материализованный результат]()
+  - [Зависимости представлений и изменения исходной схемы]()
+- [Расширенные конструкции SQL]()
+  - [Table-valued functions и генераторы строк]()
+  - [LATERAL VIEW, lateral joins и коррелированные табличные выражения]()
+  - [IDENTIFIER clause и безопасные динамические имена объектов]()
+  - [Parameter markers и отделение значений от текста запроса]()
+  - [Pipe syntax и последовательное описание преобразований]()
+  - [Ограничения рекурсивных CTE и различия Apache Spark и платформенных расширений]()
+  - [SQL-функции и SQL table functions при поддержке версии]()
+- [SQL scripting]()
+  - [Compound statements и BEGIN/END]()
+  - [DECLARE VARIABLE, SET VAR и область видимости]()
+  - [IF, CASE и условное выполнение]()
+  - [WHILE, REPEAT, FOR, LOOP, LEAVE и ITERATE]()
+  - [Курсоры: DECLARE, OPEN, FETCH и CLOSE по версии]()
+  - [EXECUTE IMMEDIATE и динамический SQL]()
+  - [Condition handlers, SQLSTATE и error classes]()
+  - [EXIT/CONTINUE handlers и вложенные области обработки ошибок]()
+  - [Различие процедурного управления и распределённого вычисления данных]()
+  - [SQL script и отсутствие общей транзакции произвольного набора statements]()
+- [Каталоги и пространства имён]()
+  - [Catalog, namespace, database, schema и table]()
+  - [Текущий каталог и текущее пространство имён]()
+  - [Одночастные и многочастные имена объектов]()
+  - [Session catalog и подключаемые каталоги]()
+  - [Каталог метаданных и фактическое место хранения данных]()
+  - [Catalog API: перечень объектов, существование и refresh]()
+- [DDL и жизненный цикл таблицы]()
+  - [CREATE TABLE, CTAS и CREATE TABLE LIKE]()
+  - [Managed и external tables]()
+  - [LOCATION, OPTIONS и TBLPROPERTIES]()
+  - [ALTER TABLE и изменение схемы или свойств]()
+  - [DROP, TRUNCATE и последствия для файлов]()
+  - [Комментарии таблиц и столбцов]()
+  - [Различия DDL для конкретных table providers]()
+- [Запись в таблицы и DML]()
+  - [INSERT INTO и INSERT OVERWRITE]()
+  - [saveAsTable и insertInto: разрешение столбцов по имени и позиции]()
+  - [DataFrameWriterV2: append, overwrite и overwritePartitions]()
+  - [Статическая и динамическая перезапись партиций]()
+  - [REPLACE TABLE и возможности каталога]()
+  - [UPDATE, DELETE и MERGE при поддержке источником и версией]()
+  - [Отсутствие универсальных ACID-гарантий у произвольного файлового источника]()
+- [Партиции таблиц и метаданные]()
+  - [PARTITIONED BY и физические каталоги партиций]()
+  - [SHOW PARTITIONS и управление метаданными партиций]()
+  - [Восстановление метаданных через REPAIR TABLE]()
+  - [REFRESH TABLE и инвалидирование метаданных]()
+  - [Метаданные после внешнего изменения файлов]()
+  - [Разделение операций над метаданными и над содержимым файлов]()
+- [Hive и Hive Metastore]()
+  - [enableHiveSupport и конфигурация Hive]()
+  - [hive-site.xml и подключение внешнего Metastore]()
+  - [Hive SerDe tables и Spark data source tables]()
+  - [Совместимость схем, партиций и форматов хранения]()
+  - [Версии клиента Metastore и конфликты зависимостей]()
+  - [Ограничения работы с Hive ACID и сторонними расширениями]()
+- [Конфигурация SQL и семантика]()
+  - [SET, RESET и SQLConf сессии]()
+  - [ANSI-поведение, приведения и store assignment policy]()
+  - [Часовой пояс, case sensitivity и legacy-настройки]()
+  - [Разрешение функций и временные пользовательские функции]()
+  - [Зависимость поведения SQL от версии и конфигурации]()
+  - [EXPLAIN и переход от SQL к анализу плана]()
 
 </details>
 
 <details>
 <summary>
 
-### 7. Паттерны проектирования и лучшие практики
+  ### 7. Чтение, запись и файловые форматы
 </summary>
 
-- **ETL/ELT паттерны**
-  - Полная и инкрементальная загрузка (по дате, по watermark, CDC)
-  - Медленно меняющиеся измерения (SCD Type 1, 2) на Spark
-  - Дедупликация записей (полная и в потоке)
-  - Upsert-паттерны с использованием Delta Merge
-- **Потоковые паттерны**
-  - Обогащение потока статическими или потоковыми данными (stream-table join, stream-stream join)
-  - Обработка запоздалых событий и пересчёт итогов
-  - Идемпотентная запись в приёмники (checkpoint + уникальный идентификатор)
-  - Паттерн “dead letter queue” для некорректных сообщений
-- **Антипаттерны (чего НЕ делать)**
-  - `collect()` на больших объёмах → драйвер OOM
-  - `groupByKey` вместо `reduceByKey`
-  - Чтение множества мелких файлов без предварительного слияния
-  - Создание огромного числа мелких партиций (и наоборот)
-  - Злоупотребление UDF при наличии встроенных функций
-  - Неправильный уровень кэширования или отсутствие кэша для повторно используемых данных
-  - Использование shuffle без необходимости
-- **Организация кода**
-  - Структура PySpark-проекта: конфиги (YAML), трансформации как чистые функции, джобы как скрипты
-  - Scala проект: sbt, структура пакетов, внедрение конфигураций (Typesafe Config)
-  - Повторное использование логики через библиотеки
-  - Логирование и обработка ошибок в production-коде
-- **Версионирование кода и данных**
-  - Git Flow/Trunk-based для кода
-  - DVC (Data Version Control) или встроенные возможности Delta/Iceberg для версионирования данных
-- **Паттерны Lakehouse**
-  - Medallion (бронза → серебро → золото) с пошаговым улучшением качества
-  - Обработка персональных данных: GDPR-удаление, маскирование
+- [Единый интерфейс источников данных]()
+  - [DataFrameReader и DataFrameWriter]()
+  - [format, schema, option, options, load и save]()
+  - [Чтение одного пути, нескольких путей и glob-шаблонов]()
+  - [Схема из метаданных и схема из содержимого]()
+  - [Batch-источники, streaming-источники и их возможности]()
+  - [Data Source V1 и V2: обзор различий]()
+- [Режимы записи и корректность публикации]()
+  - [Append, overwrite, errorIfExists и ignore]()
+  - [Каталог результата, part-файлы и служебные файлы]()
+  - [partitionBy, bucketBy и sortBy: назначение и ограничения]()
+  - [maxRecordsPerFile и влияние на размер результата]()
+  - [Перезапись партиций и риск удаления лишних данных]()
+  - [Запись во временное место и публикация готового результата]()
+  - [Commit protocol и обработка неуспешной записи]()
+- [Текст, CSV и TSV]()
+  - [text, textFile и строка как запись]()
+  - [Разделитель, заголовок, кавычки и escape-символы]()
+  - [Многострочные записи, кодировка и line separator]()
+  - [NULL, пустое значение и значения по умолчанию]()
+  - [PERMISSIVE, DROPMALFORMED и FAILFAST]()
+  - [Corrupt record column и сохранение ошибочных записей]()
+  - [Вывод схемы, enforceSchema и неодинаковые заголовки]()
+  - [Ограничения CSV для типов и больших объёмов]()
+- [JSON]()
+  - [JSON Lines и многострочный JSON]()
+  - [Вложенные объекты, массивы и смешанные типы]()
+  - [Явная схема, schema inference и samplingRatio]()
+  - [Пропущенные поля, NULL и corrupt records]()
+  - [Форматы даты и времени и часовой пояс]()
+  - [Опции парсера и несовместимые JSON-значения]()
+  - [JSON-файл и JSON внутри строкового столбца]()
+- [Parquet]()
+  - [Колонночное хранение, row groups, pages и footer]()
+  - [Физические и логические типы Parquet]()
+  - [Векторизованное чтение и batch size]()
+  - [Статистики, column pruning и predicate pushdown]()
+  - [Merge схем и стоимость mergeSchema]()
+  - [Timestamp, INT96 и совместимость календарей]()
+  - [Dictionary encoding и выбор сжатия]()
+  - [Совместимость файлов разных производителей]()
+- [ORC]()
+  - [Stripes, индексы и колонночная организация]()
+  - [Векторизованное чтение и pushdown]()
+  - [Сжатие, статистики и bloom filters]()
+  - [Native и Hive implementations]()
+  - [Эволюция схемы и взаимодействие с Hive]()
+  - [Выбор ORC или Parquet по требованиям экосистемы]()
+- [Avro и Protobuf]()
+  - [Подключение модулей spark-avro и spark-protobuf]()
+  - [Avro-контейнеры и бинарные сообщения]()
+  - [from_avro, to_avro и явная Avro-схема]()
+  - [from_protobuf, to_protobuf и descriptor files]()
+  - [Union, logical types и совместимость со Spark SQL types]()
+  - [Эволюция writer schema и reader schema]()
+  - [Отдельная интеграция со Schema Registry и wire format]()
+- [XML, бинарные файлы и изображения]()
+  - [XML-источник: доступность в версии и подключение внешнего модуля]()
+  - [Row tag, атрибуты, вложенность и схема XML]()
+  - [Проверка XML по XSD и обработка повреждённых записей]()
+  - [binaryFile: path, length, modificationTime и content]()
+  - [wholeTextFiles и чтение файла как одной записи]()
+  - [Image data source и ограничения обработки изображений]()
+  - [Большие бинарные объекты и риск исчерпания памяти]()
+- [Общие файловые опции]()
+  - [Partition discovery и basePath]()
+  - [pathGlobFilter и recursiveFileLookup]()
+  - [modifiedBefore и modifiedAfter при поддержке режима]()
+  - [ignoreMissingFiles и ignoreCorruptFiles]()
+  - [Пустые каталоги, скрытые файлы и служебные объекты]()
+  - [Совместное чтение несовместимых файлов]()
+  - [Метаданные файла и функции определения источника строки]()
+- [Сжатие и выбор формата]()
+  - [Snappy, Zstandard, gzip, LZ4 и доступность кодеков]()
+  - [Сжатие файла и сжатие блоков колонночного формата]()
+  - [Splittable и non-splittable файлы]()
+  - [Компромисс CPU, объёма хранения и сетевой передачи]()
+  - [Формат для raw, промежуточных и аналитических данных]()
+  - [Почему Parquet, Delta, Iceberg и Hudi относятся к разным уровням хранения]()
 
 </details>
 
 <details>
 <summary>
 
-### 8. Собеседование и уровень Senior
+  ### 8. Системы хранения и внешние источники
 </summary>
 
-- **Типичные вопросы (с фокусом на глубокое понимание)**
-  - Расскажите об архитектуре Spark: что происходит при `spark.sql("...").show()`?
-  - RDD vs DataFrame vs Dataset — что использовать и когда?
-  - Как работает Catalyst Optimizer? Приведите примеры правил.
-  - Что такое shuffle и как его минимизировать? Отличие reduceByKey от groupByKey.
-  - Стратегии join-ов, как Spark выбирает план, что такое CBO?
-  - AQE: как работает, какие проблемы решает?
-  - Data Skew: методы диагностики и решения (salting, AQE, join hints).
-  - Как устроена работа с памятью в Tungsten? Что такое off-heap?
-  - Как добиться exactly-once в Structured Streaming?
-- **Практические кейсы (System Design)**
-  - Спроектируйте пайплайн потоковой обработки кликстрима с гарантией exactly-once и задержкой < 1 сек.
-  - Постройте озеро данных компании с 200+ источниками, обеспечьте качество, безопасность и самообслуживание.
-  - Миграция ETL с классического DWH (Teradata/Redshift) на Spark Lakehouse.
-  - Обработка CDC из реляционных БД (Debezium → Kafka → Spark) с обновлением витрин.
-  - Архитектура для переобучения ML-моделей на Spark и развёртывания в production.
-- **Тренды и развитие**
-  - Spark Connect: клиент-серверный API, преимущества для data engineering.
-  - Project Zen: улучшения PySpark, упрощение разработки.
-  - Lakehouse-форматы: Iceberg v2, Hudi 1.0, Delta 3.0 — сравнение и тренды.
-  - Spark + LLM: интеграция с трансформерами, инференс на больших данных, векторные представления.
-  - Spark на Kubernetes: запуск и мониторинг в production, Spark Operator.
+- [Файловые системы и Hadoop connectors]()
+  - [Локальная файловая система и доступность пути на исполнителях]()
+  - [Hadoop FileSystem API и URI источников]()
+  - [HDFS, блоки, репликация и NameNode]()
+  - [Объектное хранилище и отличие от файловой системы]()
+  - [Hadoop configuration и параметры spark.hadoop.*]()
+  - [Версии connector, Hadoop libraries и зависимостей SDK]()
+- [Amazon S3 и S3-совместимые хранилища]()
+  - [S3A connector и схема s3a]()
+  - [Credentials providers и временные credentials]()
+  - [IAM roles, endpoint, region и path-style access]()
+  - [MinIO и локальное S3-совместимое окружение]()
+  - [Multipart upload, connection pool и request retries]()
+  - [Стоимость listing, запросов, rename и удаления объектов]()
+  - [Committers и безопасная публикация файлов]()
+  - [Различия гарантий AWS S3 и других реализаций S3 API]()
+- [Azure и Google Cloud Storage]()
+  - [ADLS Gen2, ABFS и abfss]()
+  - [OAuth, managed identities и способы получения токенов]()
+  - [GCS connector и схема gs]()
+  - [Service accounts и workload identity]()
+  - [Разрешения на чтение, запись и listing]()
+  - [Настройки соединений, повторных попыток и пропускной способности]()
+  - [Совместимость SDK и библиотек конкретного connector]()
+- [Надёжная работа с объектным хранилищем]()
+  - [Consistent listing и гарантии конкретного сервиса]()
+  - [Отсутствие дешёвого атомарного rename каталога]()
+  - [Сбой во время commit и частично опубликованные данные]()
+  - [Конкурентные writers и конфликтующие перезаписи]()
+  - [Жизненный цикл объектов и очистка незавершённых загрузок]()
+  - [Throttling, сетевые таймауты и лимиты запросов]()
+  - [Данные, shuffle и checkpoints: разные требования к хранению]()
+- [JDBC: чтение из реляционных баз]()
+  - [JDBC driver, url, dbtable и query]()
+  - [partitionColumn, lowerBound, upperBound и numPartitions]()
+  - [Границы разбиения как настройка stride, а не фильтр строк]()
+  - [Predicates и ручное разбиение запросов]()
+  - [fetchsize и streaming результатов драйвером БД]()
+  - [Pushdown фильтров, агрегатов и LIMIT при поддержке]()
+  - [NULL, распределение ключей и перекос JDBC-партиций]()
+  - [Согласованность снимка при параллельных соединениях]()
+  - [Ограничение нагрузки на production-базу]()
+- [JDBC: запись и транзакции]()
+  - [batchsize и число параллельных соединений]()
+  - [isolationLevel и транзакция отдельной партиции]()
+  - [createTableOptions и createTableColumnTypes]()
+  - [Overwrite, truncate и сохранение структуры таблицы]()
+  - [Повторная попытка задачи и риск повторной вставки]()
+  - [Staging table, уникальные ключи и публикация результата]()
+  - [Почему JDBC-запись не является общей транзакцией всего DataFrame]()
+- [Внешние аналитические и NoSQL-системы]()
+  - [Connectors для ClickHouse, Cassandra, Elasticsearch и MongoDB]()
+  - [Connectors для BigQuery, Snowflake и облачных DWH]()
+  - [Прямой connector, JDBC и файловый staging]()
+  - [Partitioning, pushdown и ограничения внешней системы]()
+  - [Mapping типов и схема индекса или таблицы]()
+  - [Batch size, rate limits и безопасность повторных попыток]()
+  - [Гарантии конкретного connector и матрица совместимости]()
+- [Внешние сервисы из задач Spark]()
+  - [HTTP/gRPC-вызовы и стоимость обращения на каждую строку]()
+  - [Инициализация клиента один раз на партицию]()
+  - [Пулы соединений, таймауты и bounded concurrency]()
+  - [Batch requests и ограничение общей нагрузки]()
+  - [Идемпотентность, request ID и повторные попытки Spark]()
+  - [Отдельный этап обогащения и предварительная выгрузка справочников]()
+  - [Разделение распределённой обработки и оркестрации внешних API]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 9. RDD и типизированный Dataset
+</summary>
+
+- [Основы RDD]()
+  - [Resilient Distributed Dataset и lineage]()
+  - [Создание через parallelize, textFile и внешние источники]()
+  - [RDD с примитивами, объектами и парами ключ–значение]()
+  - [Количество партиций и partitioner]()
+  - [Преобразование между RDD и DataFrame]()
+  - [Когда оправдан низкоуровневый API]()
+- [Трансформации RDD]()
+  - [map, flatMap и filter]()
+  - [mapPartitions и mapPartitionsWithIndex]()
+  - [union, intersection, subtract и distinct]()
+  - [sample, randomSplit и cartesian]()
+  - [sortBy, keyBy, zip, zipWithIndex и zipWithUniqueId]()
+  - [glom и риск сборки большой партиции в память]()
+  - [Pipe и запуск внешней программы с учётом окружения]()
+- [Действия RDD]()
+  - [count, take, first, top и takeOrdered]()
+  - [collect, collectAsMap и toLocalIterator]()
+  - [reduce, fold, aggregate и treeAggregate]()
+  - [countByKey и countByValue: размер результата на драйвере]()
+  - [foreach и foreachPartition]()
+  - [Ассоциативность и коммутативность распределённого агрегирования]()
+  - [Безопасная работа с внешними эффектами]()
+- [PairRDD и операции по ключу]()
+  - [keys, values, mapValues и flatMapValues]()
+  - [groupByKey и reduceByKey]()
+  - [aggregateByKey, foldByKey и combineByKey]()
+  - [join, leftOuterJoin, rightOuterJoin, fullOuterJoin и cogroup]()
+  - [sortByKey и repartitionAndSortWithinPartitions]()
+  - [Map-side combine и стоимость передачи данных]()
+  - [Большие группы и неограниченный рост состояния ключа]()
+- [Партиционирование RDD]()
+  - [HashPartitioner и RangePartitioner]()
+  - [partitionBy, repartition и coalesce]()
+  - [Пользовательский partitioner в JVM API]()
+  - [Сохранение partitioner и preservesPartitioning]()
+  - [Совместное партиционирование для операций по ключу]()
+  - [Почему partitioner RDD не равен партиционированию таблицы]()
+- [Broadcast variables и accumulators]()
+  - [Создание, использование и уничтожение broadcast variable]()
+  - [Неизменяемые справочники и сериализация broadcast]()
+  - [AccumulatorV2 и встроенные накопители]()
+  - [Пользовательские накопители в поддерживаемых API]()
+  - [Повторные вычисления, повторные попытки и точность накопителей]()
+  - [Накопители для диагностики и ограничения для бизнес-результата]()
+  - [Различие broadcast variable и broadcast join]()
+- [Типизированный Dataset в Scala и Java]()
+  - [Dataset[T] и DataFrame как Dataset[Row] в JVM API]()
+  - [Case classes, Java beans и Encoders]()
+  - [ExpressionEncoder, bean, Kryo и Java serialization encoders]()
+  - [as[T], toDF и typed/untyped operations]()
+  - [map, flatMap, filter и mapPartitions]()
+  - [Проверки компилятора и проверки схемы во время выполнения]()
+  - [Почему в PySpark нет типизированного Dataset API]()
+- [Группировки и агрегаты Dataset]()
+  - [groupByKey и KeyValueGroupedDataset]()
+  - [mapGroups, flatMapGroups и cogroup]()
+  - [reduceGroups и typed Aggregator]()
+  - [Буфер агрегата, merge и finish]()
+  - [Сортировка внутри групп при наличии API]()
+  - [Итератор группы и риск материализации больших групп]()
+  - [Потеря оптимизаций при переходе к непрозрачным объектным функциям]()
+- [Сохранение и диагностика RDD]()
+  - [saveAsTextFile, saveAsObjectFile, saveAsPickleFile и Hadoop OutputFormat]()
+  - [Sequence files и совместимость JVM/Python API]()
+  - [toDebugString и анализ зависимостей]()
+  - [TaskContext и информация о текущей задаче]()
+  - [Очистка ресурсов при завершении task]()
+  - [Barrier execution mode и область его применения]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 10. PySpark, JVM API, Arrow и пользовательские функции
+</summary>
+
+- [Выбор языкового интерфейса]()
+  - [PySpark, Scala, Java и SQL: возможности и ограничения]()
+  - [Общий движок выполнения SQL и DataFrame-выражений]()
+  - [Python overhead для пользовательского кода]()
+  - [Типизированный JVM-код и стоимость преобразования объектов]()
+  - [Поддержка библиотек, компетенции команды и сопровождаемость]()
+  - [Сравнение производительности на конкретной нагрузке]()
+- [Устройство PySpark Classic]()
+  - [Python driver, JVM driver и Py4J]()
+  - [Python workers на исполнителях]()
+  - [Сериализация функций и объектов через pickle/cloudpickle]()
+  - [Обмен данными между JVM и Python]()
+  - [Повторное использование Python workers]()
+  - [Python executable на driver и executors]()
+  - [Python traceback и ошибка JVM как разные уровни диагностики]()
+- [Скалярные UDF]()
+  - [Создание и регистрация Python UDF]()
+  - [returnType и соответствие возвращаемых значений схеме]()
+  - [Scala/Java UDF и регистрация SQL-функций]()
+  - [Обработка NULL внутри UDF]()
+  - [Детерминированные и недетерминированные UDF]()
+  - [Почему UDF ограничивает видимость логики для оптимизатора]()
+  - [Предпочтение встроенных функций и SQL-выражений]()
+  - [Arrow-оптимизированная Python UDF и её отличия от Pandas UDF]()
+- [Apache Arrow]()
+  - [Колонночное представление и RecordBatch]()
+  - [Ускорение обмена данными между JVM, Python и pandas]()
+  - [Arrow в createDataFrame, toPandas и Arrow API конкретной версии]()
+  - [Поддержка типов и преобразование timestamps]()
+  - [Размер Arrow batch и потребление памяти]()
+  - [Fallback и ошибки несовместимости]()
+  - [Arrow ускоряет передачу, но не устраняет ограничение памяти драйвера]()
+- [Pandas UDF]()
+  - [Scalar Pandas UDF: Series → Series]()
+  - [Iterator Pandas UDF и повторное использование инициализированного ресурса]()
+  - [Grouped aggregate Pandas UDF]()
+  - [Оконное применение и ограничения поддерживаемых frames]()
+  - [Аннотации типов и вывод типа Pandas UDF]()
+  - [Длина результата, индексы pandas и соответствие схеме]()
+  - [Большие группы, NULL и особенности Arrow-типов]()
+- [Pandas Function API и Arrow Function API]()
+  - [mapInPandas и iterator of batches]()
+  - [groupBy().applyInPandas и произвольная форма результата]()
+  - [Cogrouped applyInPandas]()
+  - [mapInArrow и операции над RecordBatch]()
+  - [Применение к группам без гарантии ограничения их размера]()
+  - [Изменение числа строк и сохранение контрактов схемы]()
+  - [Различия между функцией для partition batches и функцией для целой группы]()
+- [Pandas API on Spark]()
+  - [Модель pandas-интерфейса над распределёнными данными]()
+  - [Создание и преобразование pandas-on-Spark DataFrame]()
+  - [Индекс, default index и связанные накладные расходы]()
+  - [Операции между разными frames и неявные joins]()
+  - [Границы совместимости с pandas]()
+  - [Переход к Spark DataFrame для контроля плана]()
+  - [Почему привычная pandas-операция может вызвать дорогой shuffle]()
+- [UDTF и агрегатные расширения]()
+  - [Python UDTF и возврат нескольких строк]()
+  - [Регистрация табличной функции и lateral invocation]()
+  - [Схема результата и жизненный цикл handler]()
+  - [Arrow-оптимизация UDTF при поддержке версии]()
+  - [JVM Aggregator и пользовательские агрегаты]()
+  - [Ограничения UDF, UDTF и агрегатов в streaming и Connect]()
+- [Функции на партициях и внешние ресурсы]()
+  - [Инициализация клиента, модели или справочника на партицию]()
+  - [Итераторы и обработка без материализации всех данных]()
+  - [Закрытие соединений и обработка завершения задачи]()
+  - [Неоднократный вызов при retry и speculation]()
+  - [Непереносимые объекты, lock, socket и SparkSession в замыканиях]()
+  - [Размер замыкания и неявное захватывание self]()
+- [Инженерная организация языкового кода]()
+  - [Чистые функции DataFrame → DataFrame]()
+  - [Типизация PySpark-кода и ограничения static type checking]()
+  - [Импорты функций, alias и предотвращение конфликтов имён]()
+  - [Scala implicits, encoders и выбор Row или case class]()
+  - [Java lambdas, сериализуемые функции и checked exceptions]()
+  - [Единые контракты результатов для SQL, Python и JVM-реализаций]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 11. Планы запросов, Catalyst и движок выполнения
+</summary>
+
+- [Жизненный цикл запроса]()
+  - [SQL parser и unresolved logical plan]()
+  - [Analyzer и разрешение имён, функций и типов]()
+  - [Analyzed и optimized logical plan]()
+  - [Выбор физического плана и подготовка к исполнению]()
+  - [Переход от физических операторов к jobs и stages]()
+  - [Различие SQL plan и RDD lineage]()
+- [Чтение explain]()
+  - [simple, extended, formatted, cost и codegen]()
+  - [Scan, Project, Filter и Aggregate]()
+  - [Exchange, Sort и физические join operators]()
+  - [Whole-stage codegen markers и переходы между режимами]()
+  - [Estimated statistics и их отсутствие]()
+  - [Initial, current и final plan при AQE]()
+  - [Сопоставление плана с SQL-вкладкой Spark UI]()
+- [Catalyst Optimizer]()
+  - [Деревья выражений и операторов]()
+  - [Rules, rule batches и fixed-point execution]()
+  - [Constant folding и simplification]()
+  - [Predicate pushdown и predicate propagation]()
+  - [Column pruning и projection pruning]()
+  - [Удаление избыточных операторов и объединение projections]()
+  - [Оптимизация подзапросов и переписывание joins]()
+  - [Границы оптимизации при UDF и object operations]()
+- [Статистики и cost-based optimization]()
+  - [Размер таблицы, row count и column statistics]()
+  - [ANALYZE TABLE и вычисление статистик]()
+  - [NDV, min/max, NULL count и histograms]()
+  - [Cardinality estimation и join order]()
+  - [Устаревшие и неполные статистики]()
+  - [Статистики файлового источника и статистики каталога]()
+  - [Настройки CBO и ограничения оценки стоимости]()
+- [Tungsten и внутреннее представление данных]()
+  - [UnsafeRow и компактное бинарное представление]()
+  - [InternalRow, ColumnarBatch и Arrow: разные представления]()
+  - [Whole-stage code generation]()
+  - [Слияние операторов и уменьшение накладных расходов JVM]()
+  - [Row-based и columnar execution]()
+  - [On-heap и off-heap buffers]()
+  - [Почему Tungsten не означает, что весь Spark работает вне JVM heap]()
+- [Физические агрегаты и сортировка]()
+  - [HashAggregate, ObjectHashAggregate и SortAggregate]()
+  - [Partial, partial merge и final aggregation]()
+  - [Агрегатный буфер и возможность предварительного объединения]()
+  - [External sort и spill]()
+  - [DISTINCT-агрегаты и дополнительные стадии]()
+  - [Операторы Window и требования к сортировке]()
+- [Сканирование и уменьшение читаемых данных]()
+  - [Projection pushdown и filter pushdown]()
+  - [Partition pruning и динамическое partition pruning]()
+  - [Runtime filters и bloom filters при поддержке плана]()
+  - [Data skipping и статистики table formats]()
+  - [Nested column pruning]()
+  - [Разница фильтра до чтения и фильтра после чтения]()
+  - [Проверка фактически прочитанных файлов и байтов]()
+- [Повторное использование и сложность плана]()
+  - [Exchange reuse и subquery reuse]()
+  - [Кэшированный физический результат и повторное использование выражения]()
+  - [Длинные цепочки union и withColumn]()
+  - [Время analysis, optimization и code generation]()
+  - [Ограничения размера сгенерированного кода и fallback]()
+  - [Контроль размера плана и выделение промежуточных результатов]()
+- [Query hints и границы управления]()
+  - [Join hints и partitioning hints]()
+  - [BROADCAST, MERGE, SHUFFLE_HASH и SHUFFLE_REPLICATE_NL]()
+  - [COALESCE, REPARTITION, REPARTITION_BY_RANGE и REBALANCE]()
+  - [Приоритет hints и причины их игнорирования]()
+  - [Проверка выбранного оператора вместо доверия одному hint]()
+  - [Версионная зависимость internal API и оптимизационных правил]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 12. Партиционирование, shuffle и оптимизация запросов
+</summary>
+
+- [Выбор партиционирования]()
+  - [Input, shuffle и output partitions]()
+  - [spark.default.parallelism и spark.sql.shuffle.partitions]()
+  - [Размер партиции, длительность task и доступный параллелизм]()
+  - [Партиционирование по хэшу и по диапазону]()
+  - [Ключи распределения и число уникальных значений]()
+  - [Почему одинаковое число партиций не гарантирует совместное размещение ключей]()
+- [Перераспределение DataFrame]()
+  - [repartition по числу партиций и по столбцам]()
+  - [repartitionByRange и выбор границ по выборке]()
+  - [coalesce и уменьшение параллелизма без полного shuffle]()
+  - [Риск coalesce(1) и концентрации работы]()
+  - [sortWithinPartitions и отсутствие глобальной сортировки]()
+  - [Rebalance hints и адаптивная балансировка результата]()
+- [Разбиение файлов при чтении]()
+  - [spark.sql.files.maxPartitionBytes и openCostInBytes]()
+  - [minPartitionNum и maxPartitionNum при поддержке версии]()
+  - [Объединение небольших файлов в input partition]()
+  - [Несжимаемые и неделимые файлы как ограничение параллелизма]()
+  - [Параллельный listing и стоимость метаданных]()
+  - [Отличие разбиения файлов от количества файлов на выходе]()
+- [Внутреннее устройство shuffle]()
+  - [Shuffle map tasks и reduce tasks]()
+  - [Sort-based shuffle и shuffle blocks]()
+  - [Map-side aggregation и уменьшение передаваемого объёма]()
+  - [Shuffle write, fetch, merge и десериализация]()
+  - [Shuffle service, shuffle tracking и сохранность файлов]()
+  - [Сетевые, дисковые и CPU-затраты shuffle]()
+  - [Push-based shuffle и внешние shuffle-системы как специальные варианты]()
+- [Стратегии физического join]()
+  - [Broadcast Hash Join]()
+  - [Sort Merge Join]()
+  - [Shuffled Hash Join]()
+  - [Broadcast Nested Loop Join]()
+  - [Cartesian product и non-equi joins]()
+  - [Build side, тип join и ограничения выбора стратегии]()
+  - [Различие broadcast threshold и фактического размера в памяти]()
+  - [Broadcast timeout и нехватка памяти драйвера или executor]()
+- [Adaptive Query Execution]()
+  - [Runtime statistics и QueryStage]()
+  - [Coalescing shuffle partitions]()
+  - [Преобразование стратегии join во время выполнения]()
+  - [Local shuffle reader]()
+  - [Разбиение skewed shuffle partitions]()
+  - [Advisory partition size и минимальный параллелизм]()
+  - [Начальный и окончательный план]()
+  - [Ограничения AQE и отличие batch от streaming]()
+- [Data skew и stragglers]()
+  - [Перекос по числу строк, байтам и стоимости обработки]()
+  - [Поиск горячих ключей и сравнение p50/p95/max задач]()
+  - [NULL-ключ и популярные значения]()
+  - [Salting и корректное последующее объединение результатов]()
+  - [Разделение горячих и холодных ключей]()
+  - [Предагрегация и изменение алгоритма]()
+  - [Репликация небольшой стороны join при salting]()
+  - [Speculation как помощь при stragglers, а не универсальное решение skew]()
+- [Оптимизация хранения для запросов]()
+  - [Directory partitioning и выбор низкой или средней cardinality]()
+  - [Bucketing, сортировка бакетов и условия bucket join]()
+  - [Storage Partition Join и возможности Data Source V2]()
+  - [Совместимость partition transforms и версии connector]()
+  - [Clustered layout и локальность связанных значений]()
+  - [Цена обслуживания layout и выгода реальной нагрузки]()
+- [Small files и размер выходных файлов]()
+  - [Накладные расходы метаданных и открытия файлов]()
+  - [Связь output partitions, partitionBy и количества файлов]()
+  - [Repartition перед записью и предотвращение горячих партиций]()
+  - [maxRecordsPerFile и непостоянный размер строк]()
+  - [Compaction и объединение файлов по политике таблицы]()
+  - [Почему один большой файл также может ухудшить обработку]()
+- [Методика оптимизации]()
+  - [Фиксация baseline и корректности результата]()
+  - [Определение CPU-bound, IO-bound, memory-bound и network-bound нагрузки]()
+  - [Уменьшение читаемых данных до настройки низкоуровневых параметров]()
+  - [Изменение одного существенного фактора за эксперимент]()
+  - [Сравнение длительности, стоимости, shuffle, spill и количества задач]()
+  - [Проверка на реальном распределении данных и росте объёма]()
+  - [Фиксация причин, условий и ограничений оптимизации]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 13. Память, сериализация, кэширование и checkpoint
+</summary>
+
+- [Память процессов Spark]()
+  - [Driver heap и executor heap]()
+  - [Execution memory, storage memory и unified memory management]()
+  - [Reserved memory и user memory]()
+  - [spark.memory.fraction и spark.memory.storageFraction]()
+  - [Off-heap memory и native buffers]()
+  - [Python workers, Arrow buffers и память вне JVM heap]()
+  - [Container memory limit и memory overhead]()
+- [Сериализация]()
+  - [Java serialization и Kryo для соответствующих операций]()
+  - [Регистрация классов и spark.kryo.registrationRequired]()
+  - [Kryo buffer и слишком большие объекты]()
+  - [Encoders и внутренний бинарный формат Spark SQL]()
+  - [Pickle/cloudpickle и передача Python-функций]()
+  - [Почему настройка Kryo не меняет все пути сериализации DataFrame и Python]()
+- [Garbage collection и размещение объектов]()
+  - [Young/old generations и давление на GC]()
+  - [G1GC и выбор GC для поддерживаемой JVM]()
+  - [GC logs, паузы и доля времени сборки мусора]()
+  - [Множество мелких объектов и крупные коллекции]()
+  - [Влияние числа cores на конкуренцию за память]()
+  - [Различие утечки памяти и роста рабочей нагрузки]()
+- [Spill и внешняя обработка]()
+  - [Memory spill и disk spill]()
+  - [Сортировка и агрегирование с ограниченной памятью]()
+  - [Размер working set одной задачи]()
+  - [Локальные диски, spark.local.dir и скорость временного хранения]()
+  - [Нехватка места, inode и медленный диск]()
+  - [Когда spill ожидаем и когда свидетельствует о проблеме]()
+- [cache и persist]()
+  - [Ленивая материализация и первый action]()
+  - [StorageLevel и значения по умолчанию для разных API]()
+  - [Memory-only, memory-and-disk, disk-only и replication]()
+  - [Columnar cache DataFrame и object cache RDD]()
+  - [Сжатие кэша и размер cached batches]()
+  - [Cache eviction и повторное вычисление]()
+  - [unpersist и освобождение занятого хранения]()
+- [Выбор стратегии кэширования]()
+  - [Повторно используемый дорогой промежуточный результат]()
+  - [Фильтрация и выбор нужных столбцов перед cache]()
+  - [Цена materialization относительно повторного вычисления]()
+  - [Частичное заполнение кэша и ограниченные actions]()
+  - [Кэш разных планов и реальное попадание в cache]()
+  - [Устаревшие данные, invalidation и внешнее изменение таблицы]()
+  - [Ненужный cache как источник давления на execution memory]()
+- [Checkpoint для batch-вычислений]()
+  - [Reliable checkpoint и checkpoint directory]()
+  - [localCheckpoint и зависимость от сохранности executors]()
+  - [Обрезание lineage и сокращение сложного плана]()
+  - [Eager и lazy checkpoint]()
+  - [Отличие checkpoint, cache и записи промежуточной таблицы]()
+  - [Жизненный цикл файлов checkpoint]()
+  - [Batch checkpoint и streaming checkpoint как разные механизмы]()
+- [Память драйвера и сбор результата]()
+  - [collect и toPandas на большом наборе данных]()
+  - [toLocalIterator и размер крупнейшей партиции]()
+  - [spark.driver.maxResultSize и ограничения защиты]()
+  - [Много файлов, партиций и большой query plan на драйвере]()
+  - [Большие broadcast relations и metadata]()
+  - [Потоковая выгрузка либо распределённая запись вместо полной сборки]()
+- [Диагностика нехватки памяти]()
+  - [Java heap space, GC overhead и direct buffer memory]()
+  - [Python MemoryError и ошибки Arrow allocation]()
+  - [Container killed, exit code 137 и OOMKilled]()
+  - [Большой broadcast, большая группа и skewed partition]()
+  - [Отслеживание peak execution memory и процесса RSS]()
+  - [Уменьшение working set, изменение алгоритма и настройка ресурсов]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 14. Конфигурация, ресурсы и планирование
+</summary>
+
+- [Источники конфигурации]()
+  - [spark-defaults.conf, spark-env.sh и SparkConf]()
+  - [Параметры spark-submit и --conf]()
+  - [SparkSession.builder.config и runtime configuration]()
+  - [Приоритеты настроек и фактически применённые значения]()
+  - [Static и dynamic SQL configuration]()
+  - [Параметры, которые нужно задать до старта JVM]()
+  - [Конфигурация по окружениям и проверка обязательных параметров]()
+- [Sizing драйвера и исполнителей]()
+  - [executor-memory, executor-cores и число executors]()
+  - [Driver memory и driver cores]()
+  - [Memory overhead, PySpark memory и off-heap size]()
+  - [Task concurrency и память на одну задачу]()
+  - [Ресурсы узла, системный запас и размещение executors]()
+  - [Различие requested, allocated и фактически использованных ресурсов]()
+- [Task scheduling]()
+  - [DAGScheduler и TaskScheduler: распределение ответственности]()
+  - [FIFO и FAIR внутри Spark-приложения]()
+  - [Scheduling pools, веса и минимальные доли]()
+  - [Одновременный запуск jobs из нескольких потоков драйвера]()
+  - [Local properties, job groups и cancellation]()
+  - [Очереди cluster manager и отличие от Spark FAIR scheduler]()
+- [Dynamic Allocation]()
+  - [Начальное, минимальное и максимальное число executors]()
+  - [Scheduler backlog и запрос новых ресурсов]()
+  - [Idle timeout и удаление неиспользуемых executors]()
+  - [Cached executors и политика их удержания]()
+  - [External shuffle service, shuffle tracking и другие поддерживаемые механизмы]()
+  - [Различия настройки Standalone, YARN и Kubernetes]()
+  - [Взаимодействие с автомасштабированием узлов кластера]()
+- [Ресурсные профили и специальные ресурсы]()
+  - [ResourceProfile и требования отдельных stages]()
+  - [spark.task.cpus и CPU на задачу]()
+  - [GPU discovery и назначение ресурсов executor/task]()
+  - [Stage-level scheduling и поддержка cluster manager]()
+  - [Barrier tasks и одновременная доступность ресурсов]()
+  - [Дробное выделение GPU и ограничения конкретного ускорителя]()
+- [Повторные попытки и speculative execution]()
+  - [Лимиты task failures и stage attempts]()
+  - [Fetch retries и повторное вычисление shuffle]()
+  - [Speculation, пороги и дублирование выполнения]()
+  - [Исключение проблемных executors и узлов]()
+  - [Timeouts, heartbeat interval и сетевые задержки]()
+  - [Почему повышение таймаутов не устраняет первопричину зависания]()
+- [Decommission и прерываемые ресурсы]()
+  - [Graceful decommission executor и узла]()
+  - [Миграция shuffle blocks и cached blocks при поддержке]()
+  - [Spot/preemptible instances и предупреждения об отключении]()
+  - [Потери ресурсов во время shuffle и записи]()
+  - [Сохранение driver и контроль времени восстановления]()
+  - [Выбор баланса экономии и допустимого риска пересчёта]()
+- [Capacity planning и стоимость]()
+  - [SLA, длительность batch и нагрузка streaming]()
+  - [Профиль CPU, RAM, disk и network]()
+  - [Конкурирующие приложения и ограничения очередей]()
+  - [Минимальная стоимость при достижении SLA]()
+  - [Autoscaling nodes и Dynamic Allocation как разные уровни]()
+  - [Стоимость startup, idle time, storage requests и data egress]()
+  - [Планирование запаса для backfill и роста объёма]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 15. Основы Structured Streaming
+</summary>
+
+- [Модель потоковой обработки]()
+  - [Ограниченные и неограниченные наборы данных]()
+  - [Поток как непрерывно пополняемая таблица]()
+  - [Incremental execution поверх Spark SQL]()
+  - [Micro-batch и Continuous Processing]()
+  - [Throughput, latency и свежесть результата]()
+  - [Различия streaming и периодического batch]()
+- [Первый streaming query]()
+  - [readStream, writeStream и isStreaming]()
+  - [Явная схема потокового источника]()
+  - [Трансформации streaming DataFrame]()
+  - [queryName, start и StreamingQuery]()
+  - [awaitTermination, stop и обработка ошибки]()
+  - [Тестовый поток rate и проверка результата]()
+- [Источники потока]()
+  - [File source и требования к публикации новых файлов]()
+  - [Kafka source и подключение отдельного модуля]()
+  - [rate и rate-micro-batch для тестирования]()
+  - [Socket source и отсутствие production-гарантий]()
+  - [Табличные streaming sources конкретного table format]()
+  - [Replayable sources и доступность истории для восстановления]()
+- [Приёмники и режимы вывода]()
+  - [Append, Update и Complete]()
+  - [Совместимость output mode с операцией и sink]()
+  - [File sink и его metadata log]()
+  - [Kafka sink и гарантии доставки]()
+  - [Console и memory sink для разработки]()
+  - [foreach и ForeachWriter]()
+  - [foreachBatch и использование batch API внутри потока]()
+  - [Табличные sinks и гарантии конкретного connector]()
+- [Triggers]()
+  - [Запуск micro-batch без заданного интервала]()
+  - [ProcessingTime trigger]()
+  - [AvailableNow для ограниченной обработки накопившихся данных]()
+  - [Once как legacy-вариант и ограничения]()
+  - [Continuous trigger и ограничения режима]()
+  - [Длительность batch относительно trigger interval]()
+  - [Event time как время данных, а не отдельный тип trigger]()
+- [Время событий и watermark]()
+  - [Event time, processing time и ingestion time]()
+  - [withWatermark и допустимое опоздание]()
+  - [Watermark как оценка продвижения времени событий]()
+  - [Условия очистки состояния и выпуска результата]()
+  - [Поздние события и отсутствие симметричной гарантии отбрасывания]()
+  - [Несколько входных потоков и global watermark policy]()
+  - [Watermark, остановившийся вход и no-data batches]()
+- [Оконные агрегаты потока]()
+  - [Tumbling windows]()
+  - [Sliding windows]()
+  - [Session windows и динамический gap при поддержке]()
+  - [Окно event time и аналитический Window API как разные механизмы]()
+  - [Append/Update/Complete для оконной агрегации]()
+  - [Выбор window duration, slide и watermark delay]()
+  - [Календарные интервалы, UTC и границы окна]()
+- [Потоковые join и дедупликация]()
+  - [Stream-static join и ограничения направления соединения]()
+  - [Stream-stream join и сохранение состояния обеих сторон]()
+  - [Time-range condition и ограничение роста состояния]()
+  - [Outer join и задержка вывода отсутствующего соответствия]()
+  - [dropDuplicates в потоке]()
+  - [dropDuplicatesWithinWatermark при наличии в версии]()
+  - [Выбор event ID и временного горизонта дедупликации]()
+- [Управление несколькими queries]()
+  - [StreamingQueryManager и активные запросы]()
+  - [Query ID, run ID и batch ID]()
+  - [Независимые checkpointLocation для запросов]()
+  - [Конкуренция за executors и fair scheduling]()
+  - [Graceful shutdown приложения]()
+  - [Ограничения неподдерживаемых операций и нескольких stateful operators]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 16. Состояние, гарантии и эксплуатация потоков
+</summary>
+
+- [Stateful processing]()
+  - [Состояние по ключу и его жизненный цикл]()
+  - [Размер состояния, число ключей и cardinality]()
+  - [Обновление, удаление и TTL]()
+  - [Event-time и processing-time timers]()
+  - [Детерминированность переходов состояния]()
+  - [Бизнес-состояние и состояние инфраструктуры checkpoint]()
+- [API произвольного состояния]()
+  - [mapGroupsWithState и flatMapGroupsWithState в JVM API]()
+  - [GroupState, initial state и timeout modes]()
+  - [applyInPandasWithState и Python stateful processing]()
+  - [transformWithState и StateProcessor]()
+  - [transformWithStateInPandas при поддержке версии]()
+  - [ValueState, ListState и MapState]()
+  - [Timers, TTL, initial state и ограничения выбранного API]()
+  - [Миграция от старых stateful API к новым]()
+- [State Store]()
+  - [Версионирование состояния между micro-batches]()
+  - [HDFS-backed state store и память JVM]()
+  - [RocksDB state store и native memory]()
+  - [Checkpointing состояния и changelog checkpointing]()
+  - [Настройка памяти, write buffers и локального диска]()
+  - [State locality и стоимость перемещения на другой executor]()
+  - [Метрики state size, updates, removals и commit time]()
+- [Гарантии доставки и обработки]()
+  - [At-most-once, at-least-once и exactly-once]()
+  - [Exactly-once computation и exactly-once external effects]()
+  - [Replayable source, checkpoint и transactional либо idempotent sink]()
+  - [Повторная обработка micro-batch после сбоя]()
+  - [Недетерминированные функции и внешние обращения]()
+  - [Гарантии Continuous Processing]()
+  - [Почему checkpoint сам по себе не гарантирует однократную запись в любой sink]()
+- [foreachBatch и несколько приёмников]()
+  - [At-least-once поведение foreachBatch по умолчанию]()
+  - [Batch ID как часть протокола дедупликации]()
+  - [Transactional merge и идемпотентная запись]()
+  - [Повторное использование batch DataFrame и persist/unpersist]()
+  - [Полное потребление stateful batch при требованиях оператора]()
+  - [Последовательная запись в несколько sinks и частичный успех]()
+  - [Отсутствие общей транзакции между независимыми приёмниками]()
+- [Streaming checkpoint и восстановление]()
+  - [Offsets log, commit log, metadata и state]()
+  - [CheckpointLocation на надёжном общем хранилище]()
+  - [Восстановление после потери driver или executor]()
+  - [Совместимость схемы состояния и числа state partitions]()
+  - [Допустимые изменения источника, sink и плана запроса]()
+  - [Почему удаление checkpoint меняет семантику продолжения]()
+  - [Backup, retention и защита checkpoint от случайной очистки]()
+- [Backpressure и управление поступлением]()
+  - [maxOffsetsPerTrigger для Kafka]()
+  - [maxFilesPerTrigger и maxBytesPerTrigger при поддержке источника]()
+  - [Приём входной нагрузки быстрее доступной обработки]()
+  - [Размер micro-batch и компромисс throughput/latency]()
+  - [Рост backlog и время его погашения]()
+  - [Ограничения autoscaling для stateful нагрузки]()
+- [Производительность потоков]()
+  - [Durations разных фаз micro-batch]()
+  - [Shuffle и skew в stateful операторах]()
+  - [Рост state store и ограничение времени хранения]()
+  - [Избыточно частые commits и мелкие выходные файлы]()
+  - [Асинхронное отслеживание progress при поддержке и изменение гарантий]()
+  - [Влияние настройки RocksDB на restart и steady-state]()
+  - [Отличия оптимизаций streaming от batch AQE]()
+- [Управление поздними и некорректными событиями]()
+  - [Слишком старое или будущее event time]()
+  - [Quarantine и dead letter queue]()
+  - [Поздние исправления за пределами watermark]()
+  - [Периодический batch reconciliation]()
+  - [Replay и backfill без повторного учёта уже обработанных событий]()
+  - [Версии событий и корректировка опубликованных агрегатов]()
+- [Runbook потокового приложения]()
+  - [Контроль lag, freshness и состояния query]()
+  - [Плановая остановка и безопасный restart]()
+  - [Deployment совместимых и несовместимых изменений]()
+  - [Восстановление при потере истории источника]()
+  - [Обновление схемы состояния и стратегия новой checkpoint lineage]()
+  - [RPO, RTO и регулярная проверка восстановления]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 17. Kafka, события и Change Data Capture
+</summary>
+
+- [Основы Kafka для Spark]()
+  - [Topics, partitions, offsets и consumer groups]()
+  - [Ключ сообщения и порядок внутри Kafka partition]()
+  - [Retention, compaction и доступная история событий]()
+  - [Соответствие Kafka partitions и Spark tasks]()
+  - [Подключение spark-sql-kafka и совместимость зависимостей]()
+  - [Отдельные настройки Kafka clients и Spark query]()
+- [Kafka source]()
+  - [subscribe, subscribePattern и assign]()
+  - [key, value, topic, partition, offset, timestamp и headers]()
+  - [startingOffsets, endingOffsets и чтение batch]()
+  - [Начальные offsets по timestamp при поддержке]()
+  - [Checkpoint offsets и отличие от consumer group committed offsets]()
+  - [failOnDataLoss и удалённые offsets]()
+  - [Обнаружение новых partitions и изменение подписки]()
+  - [minPartitions и ограничение объёма micro-batch]()
+- [Kafka sink]()
+  - [Схема key/value и выбор topic]()
+  - [Передача partition и headers при поддержке]()
+  - [Сериализация сообщения и выбор бизнес-ключа]()
+  - [Producer options, acknowledgements и batching]()
+  - [Повторная запись и at-least-once semantics]()
+  - [Дедупликация downstream по идентификатору события]()
+- [Схемы сообщений и Schema Registry]()
+  - [JSON, Avro, Protobuf и формат envelope]()
+  - [Schema ID и отделение wire framing от полезной нагрузки]()
+  - [Reader/writer schema и правила совместимости]()
+  - [Кэширование схем и отказ Registry]()
+  - [Неизвестная версия схемы и quarantine]()
+  - [Удалённые, необязательные и новые поля]()
+- [Защита подключения Kafka]()
+  - [TLS/SSL и truststore/keystore]()
+  - [SASL mechanisms и настройки JAAS]()
+  - [Kerberos, credentials и delegation tokens при поддержке]()
+  - [ACL на topics и consumer operations]()
+  - [Доставка секретов на driver и executors]()
+  - [Диагностика network, authorization и authentication failures]()
+- [Модель CDC]()
+  - [Snapshot и поток изменений после snapshot]()
+  - [Insert, update, delete и tombstone]()
+  - [Before/after images и source metadata]()
+  - [Debezium envelope и другие CDC-форматы]()
+  - [LSN, SCN, transaction ID и порядок событий источника]()
+  - [Первичный ключ, ключ маршрутизации и изменения ключа]()
+  - [Транзакционные границы источника и ограничения их сохранения downstream]()
+- [Применение CDC к таблице]()
+  - [Выбор последнего изменения ключа внутри micro-batch]()
+  - [Сравнение source sequence вместо времени получения]()
+  - [Upsert и delete через возможности table format]()
+  - [Повторные и пришедшие не по порядку события]()
+  - [Delete followed by insert и защита от восстановления старой версии]()
+  - [Snapshot reconciliation и сверка с источником]()
+  - [Отдельное хранение журнала изменений и актуального состояния]()
+- [Контракты событий и replay]()
+  - [Event ID, source version и business timestamp]()
+  - [Immutable events и correction events]()
+  - [DLQ для ошибок разбора и бизнес-валидации]()
+  - [Повторная обработка исправленных событий]()
+  - [Изолированный replay и безопасная публикация пересчёта]()
+  - [Достаточная retention для планируемого восстановления]()
+  - [Другие брокеры и зависимость гарантий от внешнего connector]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 18. Lakehouse и табличные форматы
+</summary>
+
+- [Основы Lakehouse]()
+  - [Файловый формат, table format, catalog и execution engine]()
+  - [Проблемы набора Parquet-файлов без транзакционных метаданных]()
+  - [ACID, snapshot isolation и concurrent writers]()
+  - [Schema enforcement, schema evolution и partition evolution]()
+  - [Time travel, snapshots и retention]()
+  - [Copy-on-write и merge-on-read как стратегии обновления]()
+  - [Интероперабельность Spark с другими движками]()
+- [Подключение table formats к Spark]()
+  - [Библиотеки, SQL extensions и конфигурация каталога]()
+  - [Матрица совместимости Spark, Scala и table format]()
+  - [Чтение по пути и чтение по имени таблицы]()
+  - [Writer protocol и возможности reader]()
+  - [Capability negotiation и неподдерживаемые операции]()
+  - [Проверка результатов сторонним движком]()
+- [Архитектура Delta Lake]()
+  - [Delta transaction log и JSON actions]()
+  - [Add/remove files, metadata и protocol]()
+  - [Log checkpoints и восстановление snapshot]()
+  - [Optimistic concurrency control и конфликты commit]()
+  - [Table features и reader/writer compatibility]()
+  - [Различие открытого Delta Lake и возможностей управляемой платформы]()
+- [Операции Delta Lake]()
+  - [Create, append, overwrite и selective overwrite]()
+  - [UPDATE, DELETE и MERGE]()
+  - [Дубликаты source keys и неоднозначный MERGE]()
+  - [Schema enforcement, mergeSchema и overwriteSchema]()
+  - [Time travel, history и restore при поддержке]()
+  - [Change Data Feed и инкрементальное чтение изменений]()
+  - [Streaming source/sink и идемпотентные write identifiers]()
+  - [Column mapping и deletion vectors при поддержке протокола]()
+- [Обслуживание Delta Lake]()
+  - [Compaction, OPTIMIZE и доступность команд в дистрибутиве]()
+  - [Data skipping и Z-ordering]()
+  - [Clustering и доступность liquid clustering]()
+  - [VACUUM, retention и активные readers]()
+  - [Retention transaction log и data files]()
+  - [Мелкие commits, checkpoint frequency и размер метаданных]()
+  - [Удаление данных и последствия для time travel и CDF]()
+- [Архитектура Apache Iceberg]()
+  - [Table metadata, snapshots, manifest lists и manifests]()
+  - [Field IDs и безопасное переименование столбцов]()
+  - [Hidden partitioning и partition transforms]()
+  - [Schema и partition evolution]()
+  - [Catalogs: Hive, Hadoop, REST и внешние реализации]()
+  - [Data files, delete files и поддерживаемые версии формата]()
+  - [Atomic commit и optimistic concurrency]()
+- [Операции Apache Iceberg]()
+  - [Spark SQL extensions и DataFrameWriterV2]()
+  - [MERGE, UPDATE и DELETE]()
+  - [Equality deletes и position deletes]()
+  - [Copy-on-write и merge-on-read settings]()
+  - [Time travel и metadata tables]()
+  - [Branches, tags и write-audit-publish]()
+  - [Incremental scan и ограничения на типы изменений]()
+  - [Streaming read/write и snapshot lifecycle]()
+- [Обслуживание Apache Iceberg]()
+  - [rewrite_data_files и compacting delete files]()
+  - [rewrite_manifests]()
+  - [expire_snapshots и remove_orphan_files]()
+  - [Sort order, distribution mode и target file size]()
+  - [Metadata growth и планирование scan]()
+  - [Retention для branches, tags и активных jobs]()
+  - [Риск удаления файлов с учётом concurrent writes]()
+- [Архитектура Apache Hudi]()
+  - [Timeline, instants и состояния commit]()
+  - [File groups, file slices и log files]()
+  - [Copy-on-Write и Merge-on-Read tables]()
+  - [Record key, partition path и ordering field]()
+  - [Metadata table и виды индексации]()
+  - [Single-writer и поддерживаемые multi-writer modes]()
+  - [Конкурентность, lock providers и recovery]()
+- [Операции и обслуживание Apache Hudi]()
+  - [Insert, bulk insert, upsert и delete]()
+  - [Snapshot, read-optimized и incremental queries]()
+  - [CDC query при поддержке конфигурации]()
+  - [Compaction и clustering]()
+  - [Cleaner, archival и retention timeline]()
+  - [Индексы и компромисс стоимости записи и поиска ключа]()
+  - [Синхронизация с каталогами и Spark streaming integration]()
+- [Сравнение и проектирование таблиц]()
+  - [Update frequency, latency и характер чтения]()
+  - [Совместимость движков и требования к каталогу]()
+  - [Concurrency, schema evolution и эксплуатационная сложность]()
+  - [Выбор partitioning, sorting и clustering по запросам]()
+  - [Миграция существующих файлов в table format]()
+  - [Смена формата и проверка семантики обновлений]()
+  - [Производительность MERGE и стоимость обслуживания]()
+- [Жизненный цикл и надёжность Lakehouse]()
+  - [Retention snapshots и согласование с streaming consumers]()
+  - [Backup данных и независимый backup метаданных каталога]()
+  - [Disaster recovery и восстановление таблиц]()
+  - [Storage tiers и доступность исторических данных]()
+  - [Физическое удаление персональных данных]()
+  - [Аудит изменений и проверка полноты инкрементального чтения]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 19. Архитектура Spark-пайплайнов и инженерия данных
+</summary>
+
+- [Организация приложения]()
+  - [Разделение extract, transform, validate и load]()
+  - [Чистая логика преобразований и слой взаимодействия с системами]()
+  - [Переиспользуемые библиотеки и тонкие entry points]()
+  - [Конфигурация, dependency injection и управление ресурсами]()
+  - [Notebook для исследования и приложение для регулярного запуска]()
+  - [Документация входов, выходов и бизнес-инвариантов]()
+- [Batch ETL/ELT]()
+  - [Полная загрузка и инкрементальная загрузка]()
+  - [Incremental cursor по времени, ID и журналу изменений]()
+  - [High-water mark загрузки и отличие от streaming watermark]()
+  - [Lookback window и повторное чтение изменившегося периода]()
+  - [Идемпотентность запуска и безопасный rerun]()
+  - [Согласование cursor, записи результата и успешного статуса]()
+- [Моделирование аналитических данных]()
+  - [Гранулярность фактов и уникальность ключей]()
+  - [Справочники, surrogate keys и referential integrity]()
+  - [SCD Type 1 и Type 2]()
+  - [Valid time, system time и бивременные модели]()
+  - [Поздние факты и поздние изменения измерений]()
+  - [Факты, snapshots и агрегированные витрины]()
+  - [Сверка метрик между слоями и контроль двойного учёта]()
+- [Слои данных и границы ответственности]()
+  - [Raw/staging/curated/serving и Bronze/Silver/Gold]()
+  - [Сохранение неизменного исходного события]()
+  - [Нормализация, качество и бизнес-агрегации по слоям]()
+  - [Независимая переработка промежуточного слоя]()
+  - [Контракты producer/consumer и schema ownership]()
+  - [Lineage на уровне dataset, job и поля]()
+- [Публикация и согласованность результатов]()
+  - [Atomic table commit и атомарность всего pipeline]()
+  - [Write-audit-publish и проверка до публикации]()
+  - [Версии результата и переключение serving view]()
+  - [Несколько таблиц и отсутствие общей транзакции по умолчанию]()
+  - [Run ID, manifest и контроль завершённости набора outputs]()
+  - [Компенсация частичного успеха и повторяемая публикация]()
+- [Backfill и пересчёты]()
+  - [Параметризация периода и явные границы диапазона]()
+  - [Dependency-aware backfill и порядок пересчёта]()
+  - [Изоляция backfill от текущей production-нагрузки]()
+  - [Обработка старых версий схемы и бизнес-логики]()
+  - [Сверка старого и нового результата]()
+  - [Публикация пересчитанных партиций и контроль downstream]()
+- [Batch и streaming в единой системе]()
+  - [Общая логика преобразования при разных источниках]()
+  - [Lambda и Kappa architectures и их эксплуатационная цена]()
+  - [AvailableNow как инкрементальная загрузка по расписанию]()
+  - [Realtime serving и периодическая reconciliation]()
+  - [Статические справочники в долгоживущем streaming query]()
+  - [Согласование обновления справочника и результата обогащения]()
+- [Spark Declarative Pipelines]()
+  - [Доступность SDP и пакет pyspark.pipelines]()
+  - [Декларативное описание datasets, flows и зависимостей]()
+  - [Streaming tables, materialized views и temporary views]()
+  - [Python- и SQL-определения pipeline]()
+  - [Append flows и несколько потоков записи в цель]()
+  - [Batch flows, streaming flows и external sinks]()
+  - [Автоматическое построение графа зависимостей]()
+  - [Отсутствие побочных эффектов внутри функций определения dataset]()
+  - [Различия Apache SDP и расширений управляемых платформ]()
+- [Метаданные и управление изменениями]()
+  - [Data contracts и совместимость изменений]()
+  - [Каталог наборов данных, owners и документация]()
+  - [OpenLineage и интеграция с каталогами данных]()
+  - [Версии кода, схемы и входного snapshot]()
+  - [Депрекация полей и миграция consumers]()
+  - [Оценка влияния изменения на downstream-пайплайны]()
+- [Архитектурные антипаттерны]()
+  - [Цикл collect → Python processing → parallelize]()
+  - [Построчные сетевые обращения и неограниченные retries]()
+  - [Один монолитный notebook для всей платформы]()
+  - [Произвольный overwrite без проверки диапазона]()
+  - [Скрытые зависимости от текущего времени и локальных файлов]()
+  - [Отсутствие event IDs, run IDs и правил повторного запуска]()
+  - [Обещание exactly-once без проверки source и sink]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 20. Корректность, качество данных и тестирование
+</summary>
+
+- [Инварианты обработки данных]()
+  - [Уникальность ключей и допустимая cardinality]()
+  - [Completeness, validity, consistency, accuracy и freshness]()
+  - [NULL, NaN, пустые значения и неизвестные категории]()
+  - [Точность Decimal, floating-point и допустимые погрешности]()
+  - [Часовые пояса и календарные границы]()
+  - [Детерминированность выбора строки и порядка коллекций]()
+- [Локальные unit tests]()
+  - [pytest и fixture локального SparkSession]()
+  - [ScalaTest/JUnit и тестирование JVM API]()
+  - [Минимальные datasets для бизнес-правила]()
+  - [Тестирование DataFrame → DataFrame отдельно от IO]()
+  - [assertDataFrameEqual и assertSchemaEqual]()
+  - [chispa и spark-testing-base как внешние библиотеки]()
+  - [Очистка temp views, cache и конфигурации между тестами]()
+- [Сравнение результатов]()
+  - [Проверка схемы, типов и nullability]()
+  - [Порядок строк и сравнение как мультимножества]()
+  - [Дубликаты и почему простого except недостаточно]()
+  - [Absolute/relative tolerance для чисел]()
+  - [Сравнение вложенных arrays, maps и structs]()
+  - [Стабильные expected datasets и golden files]()
+- [Тестирование граничных случаев]()
+  - [Пустой DataFrame и полностью NULL-столбцы]()
+  - [Дублирующиеся ключи и many-to-many join]()
+  - [Отрицательные, предельные и переполняющиеся числа]()
+  - [Некорректные даты, DST и неоднозначные timestamps]()
+  - [Большие группы, горячие ключи и длинные строки]()
+  - [Несовместимые схемы, добавленные поля и удалённые поля]()
+- [Property-based и metamorphic testing]()
+  - [Генерация данных с заданными инвариантами]()
+  - [Независимость результата от числа партиций]()
+  - [Идемпотентность очистки и повторной загрузки]()
+  - [Сохранение totals при допустимом преобразовании]()
+  - [Сравнение альтернативной реализации на малом наборе]()
+  - [Выявление недетерминированных aggregate и dedup rules]()
+- [Integration и contract tests]()
+  - [Реальные форматы файлов и временные каталоги]()
+  - [Testcontainers для Kafka, JDBC, MinIO и catalog services]()
+  - [Проверка прав доступа и конфигурации connectors]()
+  - [Совместимость producer/consumer schemas]()
+  - [Commit, concurrency и чтение после записи]()
+  - [Окружение, близкое к production, и ограничения local mode]()
+- [Тестирование streaming]()
+  - [Детерминированные входные micro-batches]()
+  - [rate-micro-batch и тестовые файловые источники]()
+  - [MemoryStream в JVM-тестах с учётом internal API]()
+  - [Дубликаты, поздние события и продвижение watermark]()
+  - [Restart из checkpoint и повторная обработка batch]()
+  - [Таймеры, TTL и очистка состояния]()
+  - [Ожидание прогресса по условию вместо произвольных sleeps]()
+- [Data quality checks в production]()
+  - [Проверки до и после преобразования]()
+  - [Deequ, PyDeequ и Great Expectations]()
+  - [Метрики качества, профилирование и пороги]()
+  - [Fail, warn, quarantine и drop как явные политики]()
+  - [Drift распределения, объёма и схемы]()
+  - [Стоимость quality jobs и переиспользование вычислений]()
+  - [Хранение результатов проверок вместе с run ID]()
+- [Reconciliation и аудит]()
+  - [Сверка row counts, sums и контрольных групп]()
+  - [Сверка источника, staging и целевой таблицы]()
+  - [Missing keys, unexpected keys и дубли]()
+  - [Хэши и ограничения вероятностной проверки]()
+  - [Выборочные проверки и полная сверка критичных данных]()
+  - [Аудит CDC, удалений и поздних исправлений]()
+- [Performance и resilience testing]()
+  - [Репрезентативный объём и распределение ключей]()
+  - [Cold/warm cache и фиксация конфигурации]()
+  - [Regression budgets по длительности и стоимости]()
+  - [Fault injection: потеря executor, driver и доступности sink]()
+  - [Retry storm, throttling и заполнение диска]()
+  - [Проверка результата после recovery, а не только успешного статуса]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 21. Наблюдаемость, профилирование и диагностика
+</summary>
+
+- [Spark UI]()
+  - [Jobs, Stages, SQL, Executors, Storage и Environment]()
+  - [DAG visualization и SQL plan visualization]()
+  - [Jobs, stages и tasks одного SQL execution]()
+  - [Input/output, shuffle read/write и spill]()
+  - [Task duration, GC time и scheduler delay]()
+  - [Executor lost, failed tasks и retry attempts]()
+  - [Распределение метрик, а не только средние значения]()
+- [SQL metrics и поиск bottleneck]()
+  - [Число строк на входе и выходе оператора]()
+  - [Scan time, aggregate time и join metrics]()
+  - [Broadcast size и время подготовки broadcast]()
+  - [Shuffle partitions и runtime statistics]()
+  - [Sort, spill и peak memory]()
+  - [Связь operator metrics с медленной стадией]()
+- [History Server и event logs]()
+  - [Включение spark.eventLog.enabled]()
+  - [Размещение event logs на общем хранилище]()
+  - [Настройка и доступ к History Server]()
+  - [Rolling logs, compression и compaction]()
+  - [Retention, cleanup и размер истории]()
+  - [Incomplete applications и logs аварийного завершения]()
+  - [Доступ к истории и защита чувствительной информации]()
+- [Логирование приложения]()
+  - [Log4j2 и log4j2.properties]()
+  - [Логи driver, executors и Python workers]()
+  - [Структурированные логи и поля run ID/job ID/query ID]()
+  - [Logging levels и управление объёмом]()
+  - [Агрегация через централизованную систему логов]()
+  - [Пользовательская ошибка, wrapped exception и root cause]()
+  - [Редактирование секретов и персональных данных в логах]()
+- [Метрики и внешние системы]()
+  - [Spark metrics system и metrics.properties]()
+  - [JMX, supported sinks и Prometheus endpoints при наличии]()
+  - [Executor/process metrics и системные метрики узла]()
+  - [Интеграция с Prometheus и Grafana]()
+  - [Labels, высокая cardinality и стоимость метрик]()
+  - [Сопоставление runtime metrics и бизнес-метрик]()
+- [Listeners и REST API]()
+  - [SparkListener и события жизненного цикла]()
+  - [QueryExecutionListener для SQL]()
+  - [StreamingQueryListener и StreamingQueryProgress]()
+  - [Spark UI/History Server REST API]()
+  - [Сбор кастомных метрик и история выполнений]()
+  - [Неблокирующая обработка событий listener]()
+- [Мониторинг streaming]()
+  - [Input rows, inputRowsPerSecond и processedRowsPerSecond]()
+  - [Batch duration и durationMs phases]()
+  - [Kafka lag и source progress]()
+  - [Watermark и event-time progress]()
+  - [State operator metrics и RocksDB custom metrics]()
+  - [Output freshness и длительность отсутствия результата]()
+  - [Различие отсутствия входа и остановившегося query]()
+- [Профилирование]()
+  - [JVM thread dumps, heap dumps и GC logs]()
+  - [Java Flight Recorder и async-profiler]()
+  - [Python/UDF profiling при поддержке выбранного API]()
+  - [CPU, allocations и native memory]()
+  - [Профилирование отдельного executor и сопоставление с task]()
+  - [Безопасная выборка профиля без чрезмерной нагрузки]()
+- [Диагностика типичных сбоев]()
+  - [AnalysisException и ошибки разрешения схемы]()
+  - [Serialization errors и Task not serializable]()
+  - [FetchFailed и MetadataFetchFailed]()
+  - [ExecutorLostFailure и потеря узла]()
+  - [ClassNotFoundException, NoSuchMethodError и classpath conflicts]()
+  - [Broadcast timeout, network timeout и connection refused]()
+  - [No space left on device и ошибки файлового commit]()
+  - [Authentication, authorization и credential expiry]()
+- [Диагностика медленной или зависшей job]()
+  - [Нет tasks: очередь, планирование или анализ большого плана]()
+  - [Одна долгая task: skew, большой файл или внешний сервис]()
+  - [Высокий GC и memory pressure]()
+  - [Большой shuffle fetch wait и медленная сеть]()
+  - [Низкая CPU utilization при IO wait]()
+  - [Подвисшее внешнее соединение и отсутствующий timeout]()
+  - [Отличие медленного вычисления от медленной записи или commit]()
+- [SLO, алерты и incident response]()
+  - [Success rate, runtime, freshness и backlog SLO]()
+  - [Алерты на бизнес-симптом и инфраструктурную причину]()
+  - [Runbook, owner и данные для первичной диагностики]()
+  - [Корреляция изменений кода, данных и инфраструктуры]()
+  - [Postmortem и предотвращение повторного сбоя]()
+  - [Измерение времени обнаружения и восстановления]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 22. Развёртывание: Standalone, YARN, Kubernetes и облака
+</summary>
+
+- [Модели развёртывания]()
+  - [Local, standalone cluster и внешний cluster manager]()
+  - [Master URL и адреса driver/executors]()
+  - [Client/cluster deploy mode и место размещения driver]()
+  - [Сетевые маршруты между компонентами]()
+  - [Долгоживущий кластер и ephemeral cluster под job]()
+  - [Отделение compute от storage]()
+- [Spark Standalone]()
+  - [Master, workers и регистрация executors]()
+  - [Ресурсы worker и ограничения приложения]()
+  - [Запуск и supervision driver при поддержке режима]()
+  - [Master recovery и ZooKeeper-based high availability]()
+  - [Логи, рабочие каталоги и cleanup]()
+  - [Ограничения deploy modes для выбранного языка]()
+- [Spark on YARN]()
+  - [ResourceManager, NodeManager и ApplicationMaster]()
+  - [YARN containers и размещение driver/executors]()
+  - [Очереди, CapacityScheduler/FairScheduler и доступные ресурсы]()
+  - [Hadoop/Hive configuration и distributed cache]()
+  - [Log aggregation и диагностика application attempts]()
+  - [Kerberos, delegation tokens и длительные приложения]()
+  - [External shuffle service и Dynamic Allocation]()
+- [Spark on Kubernetes]()
+  - [Driver pod, executor pods и Kubernetes API]()
+  - [ServiceAccount, RBAC и namespace]()
+  - [Requests/limits и соответствие настройкам Spark]()
+  - [Pod templates, node selectors, affinity и tolerations]()
+  - [ConfigMaps, Secrets и service discovery]()
+  - [EmptyDir, PVC и локальные shuffle disks]()
+  - [Image pull, registry и dependency distribution]()
+  - [Pod lifecycle, eviction, retries и cleanup]()
+- [Контейнерные образы]()
+  - [Образ с совместимыми Spark, JDK и Python]()
+  - [JVM- и Python-зависимости внутри image]()
+  - [Non-root user, filesystem permissions и writable paths]()
+  - [Reproducible builds и фиксация image digest]()
+  - [Сканирование уязвимостей и минимальный runtime]()
+  - [Контейнерные лимиты и поведение JVM]()
+- [Kubernetes Operators]()
+  - [Native submission и operator-managed application]()
+  - [Apache Spark Kubernetes Operator и другие реализации]()
+  - [CRDs и различия SparkApp/SparkApplication по operator]()
+  - [Reconciliation, restart policies и scheduled runs]()
+  - [Версия operator и совместимость Spark/Kubernetes]()
+  - [GitOps, status conditions и наблюдаемость]()
+- [Управляемые облачные платформы]()
+  - [Amazon EMR и EMR Serverless]()
+  - [Google Dataproc и serverless-варианты]()
+  - [AWS Glue и ограничения runtime]()
+  - [Azure Synapse, HDInsight и другие сервисы по доступности]()
+  - [Databricks compute и managed runtime]()
+  - [Платформенные каталоги, connectors и orchestration]()
+  - [Различие Apache API и vendor-specific enhancements]()
+- [Serverless и интерактивный compute]()
+  - [Startup latency и warm pools]()
+  - [Автоматический scaling и скрытые ресурсные ограничения]()
+  - [Custom dependencies и ограничения образов]()
+  - [Персистентность диска и streaming checkpoints]()
+  - [Поддержка long-running streaming и ограничения сервиса]()
+  - [Стоимость, observability и переносимость приложений]()
+- [Infrastructure as Code]()
+  - [Terraform, CloudFormation и Bicep по платформе]()
+  - [Сети, IAM, storage и compute как единое окружение]()
+  - [Разделение dev/stage/prod]()
+  - [Quotas, autoscaling policies и placement]()
+  - [Проверка инфраструктуры и безопасное обновление]()
+  - [Воспроизводимое тестовое окружение и teardown]()
+- [Мультитенантность и изоляция]()
+  - [Изоляция приложений, пользователей и данных]()
+  - [Отдельные queues, namespaces и compute pools]()
+  - [Noisy neighbors и ресурсные квоты]()
+  - [Изоляция notebooks и удалённых sessions]()
+  - [Сетевые политики и права на общие storage paths]()
+  - [SLA workloads и резервирование критичных ресурсов]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 23. Сборка, доставка, оркестрация и эксплуатация
+</summary>
+
+- [Упаковка JVM-приложения]()
+  - [sbt, Maven и Gradle]()
+  - [Provided scope для зависимостей Spark]()
+  - [Fat JAR, sbt-assembly и Maven Shade]()
+  - [Shading, merge strategies и resource conflicts]()
+  - [Бинарная совместимость Scala и JVM target]()
+  - [Classpath order и конфликтующие версии библиотек]()
+- [Упаковка PySpark-приложения]()
+  - [Структура Python-пакета и pyproject.toml]()
+  - [Wheel, zip и разные способы доставки пакета]()
+  - [--py-files и ограничения на нативные зависимости и wheel]()
+  - [--archives и подготовленное окружение Python]()
+  - [venv-pack, conda-pack и PEX по возможностям среды]()
+  - [Пакеты в контейнерном image]()
+  - [Одинаковый Python runtime на driver и executors]()
+- [spark-submit и распространение зависимостей]()
+  - [--class, --master, --deploy-mode и аргументы приложения]()
+  - [--jars, --packages и Maven repositories]()
+  - [--files, --archives и SparkFiles]()
+  - [Dependency exclusions и разрешение конфликтов]()
+  - [Offline environments и внутренний artifact repository]()
+  - [Доступ executors к библиотекам и конфигурационным файлам]()
+- [CI/CD]()
+  - [Linting, formatting, type checks и unit tests]()
+  - [Integration tests и проверка совместимости runtime]()
+  - [Сборка JAR/wheel/image и публикация версионированных artifacts]()
+  - [GitHub Actions, GitLab CI и другие CI systems]()
+  - [Продвижение одного artifact через окружения]()
+  - [Secrets, permissions и защита цепочки поставки]()
+  - [Canary, shadow runs и сверка результатов]()
+- [Оркестрация batch workloads]()
+  - [Apache Airflow и SparkSubmitOperator]()
+  - [Kubernetes submission и platform-specific operators]()
+  - [Databricks Workflows, Azure Data Factory и AWS Step Functions]()
+  - [DAG dependencies, sensors и data-aware scheduling]()
+  - [Run parameters, logical date и интервал данных]()
+  - [Task retries и идемпотентность приложения]()
+  - [Concurrent runs, pools и ограничения на backfill]()
+- [Надёжный запуск и завершение]()
+  - [Run ID, correlation ID и metadata запуска]()
+  - [Exit codes и критерии успешной job]()
+  - [Timeouts, cancellation и cleanup]()
+  - [Проверка фактической публикации результата]()
+  - [Graceful shutdown для long-running queries]()
+  - [Разделение retry приложения и retry оркестратора]()
+- [Release и rollback]()
+  - [Версионирование кода, конфигурации и схем]()
+  - [Совместимость новых writers со старыми readers]()
+  - [Rollback кода и невозможность автоматического отката всех данных]()
+  - [Table snapshots и восстановление опубликованного состояния]()
+  - [Совместимость streaming checkpoint при rollback]()
+  - [План миграции и критерий остановки rollout]()
+- [Документация эксплуатации]()
+  - [README приложения и инструкции запуска]()
+  - [Data contracts и владельцы datasets]()
+  - [SLA/SLO, расписание и ожидаемые объёмы]()
+  - [Runbooks для retry, backfill и recovery]()
+  - [Описание зависимостей и внешних лимитов]()
+  - [Архитектурные решения и история изменений]()
+- [FinOps и эксплуатационная эффективность]()
+  - [Стоимость job, dataset и команды]()
+  - [Теги ресурсов и attribution расходов]()
+  - [Idle clusters, startup time и wasted compute]()
+  - [Storage requests, retention и egress]()
+  - [Стоимость частых MERGE, compaction и quality checks]()
+  - [Экономия без ухудшения freshness и recovery guarantees]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 24. Безопасность и управление доступом к данным
+</summary>
+
+- [Модель угроз и границы доверия]()
+  - [Пользовательский код как исполнение с правами приложения]()
+  - [Driver, executors, storage и control plane]()
+  - [Доверенные и недоверенные notebooks или зависимости]()
+  - [Изоляция tenants и ограничение сетевого доступа]()
+  - [Минимальные права для чтения, записи и администрирования]()
+- [Аутентификация компонентов]()
+  - [Spark authentication и внутренние shared secrets]()
+  - [Kerberos в Hadoop/YARN]()
+  - [Delegation tokens и renewal]()
+  - [Cloud IAM roles и workload identity]()
+  - [Proxy authentication для внешних SQL/Connect endpoints]()
+  - [Различие transport security и identity authentication]()
+- [Шифрование]()
+  - [TLS для доступных endpoint и внешних соединений]()
+  - [Spark network encryption и настройки по версии]()
+  - [Шифрование локальных временных данных при поддержке]()
+  - [Encryption at rest в HDFS и объектном хранилище]()
+  - [KMS, ротация ключей и ответственность платформы]()
+  - [Границы покрытия разных механизмов шифрования]()
+- [Авторизация и политики]()
+  - [Spark UI ACL и права на просмотр истории]()
+  - [Kubernetes RBAC и YARN queue permissions]()
+  - [Storage-level permissions и table/catalog permissions]()
+  - [Ranger и другие внешние policy engines]()
+  - [Row-level и column-level policies при поддержке платформы]()
+  - [Риск обхода catalog policy прямым доступом к файлам]()
+- [Секреты и credentials]()
+  - [Secrets managers и краткоживущие credentials]()
+  - [Доставка credentials исполнителям]()
+  - [Expiry и renewal в долгоживущем приложении]()
+  - [Redaction Spark configuration и log messages]()
+  - [Секреты в command line, notebooks, event logs и artifacts]()
+  - [Отдельные service identities для разных workloads]()
+- [Безопасность кода и зависимостей]()
+  - [SQL injection через конкатенацию значений и идентификаторов]()
+  - [Небезопасная десериализация и недоверенный pickle]()
+  - [Проверка JAR, wheels, images и repositories]()
+  - [Dependency pinning, SBOM и vulnerability scanning]()
+  - [Ограничение исходящих соединений UDF и executor-кода]()
+  - [Подпись artifacts и provenance при требованиях организации]()
+- [Персональные и чувствительные данные]()
+  - [Классификация полей и минимизация доступа]()
+  - [Маскирование, tokenization и pseudonymization]()
+  - [Шифрование и хэши: различие назначения]()
+  - [Контроль sample data, debug logs и тестовых fixtures]()
+  - [Retention, удаления и исторические snapshots]()
+  - [Аудит доступа и изменений данных]()
+- [Безопасная эксплуатация endpoint]()
+  - [Приватные сети, firewall и NetworkPolicy]()
+  - [Защита UI, History Server, Thrift Server и Connect Server]()
+  - [Reverse proxy, identity provider и session boundaries]()
+  - [Quotas, query timeouts и resource isolation]()
+  - [Проверка permissions после обновления конфигурации]()
+  - [Incident response для компрометации ключей или данных]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 25. Spark Connect и распределённые SQL-сервисы
+</summary>
+
+- [Архитектура Spark Connect]()
+  - [Разделение client process и Spark driver]()
+  - [Unresolved logical plans как протокол взаимодействия]()
+  - [Protocol Buffers, gRPC и Arrow results]()
+  - [Session-based client API]()
+  - [Connect Server и обычное распределённое выполнение на executors]()
+  - [Различия Connect и PySpark Classic]()
+- [Подключение клиента]()
+  - [SparkSession.builder.remote и SPARK_REMOTE]()
+  - [Connection string, endpoint и TLS]()
+  - [PySpark client и JVM/Scala client по версии]()
+  - [Лёгкий pyspark-client и требования его окружения]()
+  - [Локальное тестирование Connect Server]()
+  - [Совместимость версий клиента и сервера]()
+- [API и ограничения Connect]()
+  - [Поддержка DataFrame, SQL и Dataset по клиенту]()
+  - [Отсутствие прямого RDD API и доступа к SparkContext]()
+  - [Отсутствие доступа к JVM driver через Py4J]()
+  - [Server-side конфигурация и session-level параметры]()
+  - [Поддержка streaming, UDF и ML API в конкретной версии]()
+  - [Проверка поддерживаемости библиотек, использующих private JVM fields]()
+- [Пользовательский код и artifacts]()
+  - [Передача Python-функций и зависимостей]()
+  - [addArtifact и доступные способы доставки файлов]()
+  - [JVM classes, ClassFinder и class loaders]()
+  - [Изоляция зависимостей клиентского и серверного окружения]()
+  - [Размер query plan и gRPC message limits]()
+  - [Недоверенный пользовательский код и права server-side исполнения]()
+- [Эксплуатация Connect]()
+  - [Аутентификация через внешнюю инфраструктуру и proxy]()
+  - [Session lifecycle и очистка ресурсов]()
+  - [Cancellation, deadlines и ошибки связи]()
+  - [Retry RPC и различие с повторным исполнением job]()
+  - [Мультитенантность и реальные границы изоляции]()
+  - [Отладка клиентского кода и observability сервера]()
+- [Spark SQL CLI и Thrift Server]()
+  - [spark-sql для интерактивных и скриптовых запросов]()
+  - [Spark Thrift Server и HiveServer2 protocol]()
+  - [Подключение через JDBC/ODBC и Beeline]()
+  - [Session isolation, temporary objects и конфигурация]()
+  - [Аутентификация, authorization и query limits]()
+  - [BI-инструменты, concurrent queries и нагрузка на driver]()
+- [Другие способы удалённого доступа]()
+  - [Apache Livy как внешний REST/session service]()
+  - [Notebook platforms и managed remote execution]()
+  - [Connect, Thrift и Livy: различие протоколов и задач]()
+  - [Интерактивные сессии и изолированные batch submissions]()
+  - [Serving аналитики и выбор отдельного query engine]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 26. Машинное обучение и MLlib
+</summary>
+
+- [Модель MLlib]()
+  - [DataFrame-based spark.ml и legacy spark.mllib]()
+  - [DenseVector, SparseVector и vector columns]()
+  - [Transformer, Estimator и Model]()
+  - [Params, ParamMap и names of input/output columns]()
+  - [Pipeline и PipelineModel]()
+  - [Разделение подготовки данных, обучения и инференса]()
+- [Числовые и категориальные признаки]()
+  - [VectorAssembler и VectorIndexer]()
+  - [StringIndexer и IndexToString]()
+  - [OneHotEncoder и неизвестные категории]()
+  - [StandardScaler, MinMaxScaler, MaxAbsScaler и Normalizer]()
+  - [Imputer, Bucketizer и QuantileDiscretizer]()
+  - [Binarizer, PolynomialExpansion и Interaction]()
+  - [VectorSlicer и выбор групп признаков]()
+- [Текстовые признаки]()
+  - [Tokenizer и RegexTokenizer]()
+  - [StopWordsRemover и NGram]()
+  - [CountVectorizer и HashingTF]()
+  - [IDF и TF-IDF]()
+  - [Word2Vec]()
+  - [FeatureHasher и hashing collisions]()
+  - [Контроль словаря и train/test leakage]()
+- [Снижение размерности и отбор признаков]()
+  - [PCA и ограничение размера матрицы признаков]()
+  - [ChiSqSelector и UnivariateFeatureSelector]()
+  - [VarianceThresholdSelector]()
+  - [LSH для приближённого поиска соседей]()
+  - [BucketedRandomProjectionLSH и MinHashLSH]()
+  - [Trade-off точности, числа признаков и стоимости модели]()
+- [Классификация и регрессия]()
+  - [LogisticRegression и LinearRegression]()
+  - [GeneralizedLinearRegression и AFTSurvivalRegression]()
+  - [DecisionTree, RandomForest и Gradient-Boosted Trees]()
+  - [NaiveBayes и LinearSVC]()
+  - [MultilayerPerceptronClassifier и OneVsRest]()
+  - [Factorization Machines при поддержке API]()
+  - [Weights, class imbalance, regularization и thresholds]()
+  - [Ограничения алгоритма по типу задачи и labels]()
+- [Кластеризация и рекомендации]()
+  - [KMeans и BisectingKMeans]()
+  - [GaussianMixture и PowerIterationClustering]()
+  - [LDA и тематическое моделирование]()
+  - [ALS для explicit и implicit feedback]()
+  - [Cold-start strategy и новые пользователи или items]()
+  - [Оценка кластеризации и ranking quality]()
+- [Статистические инструменты]()
+  - [Correlation и covariance]()
+  - [Chi-square, Kolmogorov–Smirnov и другие доступные tests]()
+  - [Summarizer для vector columns]()
+  - [Распределённые матрицы и ограничения legacy linear algebra API]()
+  - [Численная устойчивость и стоимость materialization]()
+- [Evaluation и tuning]()
+  - [BinaryClassificationEvaluator и MulticlassClassificationEvaluator]()
+  - [RegressionEvaluator, ClusteringEvaluator и RankingEvaluator]()
+  - [TrainValidationSplit и CrossValidator]()
+  - [ParamGridBuilder и стоимость комбинаций]()
+  - [Fold column, seed и временное разделение данных]()
+  - [Параллельный подбор и ограничения ресурсов]()
+  - [Leakage, reproducibility и выбор корректной метрики]()
+- [Production ML pipeline]()
+  - [Сохранение и загрузка models и PipelineModel]()
+  - [Совместимость model artifacts между версиями Spark]()
+  - [Custom Transformer/Estimator и persistence]()
+  - [MLflow как внешний tracking/registry layer]()
+  - [Feature store и point-in-time correctness]()
+  - [Batch inference, monitoring и drift]()
+  - [MLeap/PMML и ограниченная переносимость конкретных моделей]()
+  - [Когда Spark используется для подготовки данных, а обучение выполняется отдельно]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 27. Графы, геоданные, GPU и интеграции с AI
+</summary>
+
+- [Основы распределённых графов]()
+  - [Vertices, edges и свойства графа]()
+  - [Directed, undirected и multigraph models]()
+  - [Идентификаторы вершин и referential integrity]()
+  - [Degree skew и supernodes]()
+  - [Итеративные алгоритмы, shuffle и checkpointing]()
+- [GraphX]()
+  - [Graph, VertexRDD, EdgeRDD и triplets]()
+  - [mapVertices, mapEdges и mapTriplets]()
+  - [subgraph, mask, groupEdges и joinVertices]()
+  - [aggregateMessages и сообщения между вершинами]()
+  - [Pregel API и итеративное вычисление]()
+  - [PartitionStrategy, vertex cuts и репликация вершин]()
+  - [PageRank, connected components, triangle count и shortest paths]()
+  - [Scala API, RDD-based execution и границы применения]()
+- [GraphFrames]()
+  - [Внешняя библиотека и совместимость package с Spark]()
+  - [Vertices/edges как DataFrames]()
+  - [Motif finding и graph pattern queries]()
+  - [BFS, connected components, PageRank и label propagation]()
+  - [aggregateMessages и Pregel при поддержке версии]()
+  - [GraphFrames checkpoints и очистка промежуточных данных]()
+  - [Сравнение GraphFrames, GraphX и специализированной graph database]()
+- [Геопространственная обработка]()
+  - [Точки, геометрии, координатные системы и CRS]()
+  - [Apache Sedona и другие внешние spatial extensions]()
+  - [Spatial joins, distance queries и spatial indexes]()
+  - [Spatial partitioning и обработка skew]()
+  - [Raster/vector data и форматы обмена]()
+  - [Геопространственные функции Spark по доступности версии]()
+- [GPU-ускорение SQL и DataFrame workloads]()
+  - [RAPIDS Accelerator for Apache Spark как внешний plugin]()
+  - [Поддерживаемые operators и fallback на CPU]()
+  - [Columnar GPU execution и стоимость CPU/GPU transfers]()
+  - [GPU memory, batching и spill]()
+  - [Resource discovery и concurrent GPU tasks]()
+  - [Проверка численной корректности и реальной стоимости ускорения]()
+- [Распределённое обучение внешних моделей]()
+  - [Spark для подготовки training datasets]()
+  - [TorchDistributor и PyTorch distributed training]()
+  - [Barrier scheduling и запуск workers]()
+  - [Horovod и другие внешние integrations по совместимости]()
+  - [Checkpoint models, restart и topology]()
+  - [Отдельные ML training platforms и границы роли Spark]()
+- [Инференс моделей]()
+  - [Загрузка модели один раз на worker или iterator]()
+  - [Pandas/Arrow batches и predict_batch_udf]()
+  - [CPU/GPU batching и ограничение памяти модели]()
+  - [Broadcast metadata и безопасная доставка model artifacts]()
+  - [Версия модели, input schema и reproducibility]()
+  - [Идемпотентность результата и повторные попытки задач]()
+- [LLM и embeddings workflows]()
+  - [Подготовка корпусов, очистка и дедупликация текстов]()
+  - [Chunking, tokenization и контроль размеров записей]()
+  - [Batch embeddings и фиксация версии модели]()
+  - [Внешние inference APIs, rate limits и batching]()
+  - [Запись embeddings в таблицы и внешние vector stores]()
+  - [Контроль стоимости, качества, retry и privacy]()
+  - [Разделение Spark data pipeline и интерактивного LLM serving]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 28. Расширения Spark и изучение исходного кода
+</summary>
+
+- [Устройство исходного проекта]()
+  - [Модули core, sql, catalyst, streaming, mllib и python]()
+  - [Scala/Java sources и Python wrappers]()
+  - [Сборка Spark и выбор профилей]()
+  - [Локальные integration tests и dev tools]()
+  - [Public, developer, experimental и internal API]()
+- [Изучение Spark Core]()
+  - [DAGScheduler, TaskScheduler и scheduler backends]()
+  - [Task execution и TaskContext]()
+  - [BlockManager и управление распределёнными blocks]()
+  - [ShuffleManager и map output tracking]()
+  - [RPC environment, heartbeats и executor lifecycle]()
+  - [Переход от наблюдаемого сбоя к соответствующему участку исходников]()
+- [Data Source V2: чтение]()
+  - [TableProvider, Table и capabilities]()
+  - [ScanBuilder, Scan и Batch]()
+  - [InputPartition и PartitionReaderFactory]()
+  - [Columnar reads и передача preferred partitioning]()
+  - [SupportsPushDownFilters, required columns и другие pushdowns]()
+  - [Pushdown aggregates, limits и runtime filters при поддержке]()
+  - [Statistics и проверка корректности pushed predicates]()
+- [Data Source V2: запись и каталоги]()
+  - [WriteBuilder, BatchWrite и DataWriterFactory]()
+  - [Commit messages, commit и abort]()
+  - [Распределение и ordering requirements]()
+  - [StreamingRead/StreamingWrite и offsets/epochs]()
+  - [Row-level operations и требования UPDATE/DELETE/MERGE]()
+  - [CatalogPlugin, TableCatalog и SupportsNamespaces]()
+  - [StagingTableCatalog и atomic table creation/replacement]()
+  - [ViewCatalog, FunctionCatalog и ProcedureCatalog по версии]()
+- [Python Data Source API]()
+  - [DataSource, DataSourceReader и DataSourceWriter]()
+  - [Регистрация источника и options]()
+  - [Разделение чтения на input partitions]()
+  - [Сериализация reader и доставка зависимостей]()
+  - [Streaming reader/writer APIs по версии]()
+  - [Commit/abort, повторные попытки и тестирование connector]()
+  - [Различия Python Data Source API и JVM Data Source V2]()
+- [Catalyst extensions]()
+  - [SparkSessionExtensions и injection points]()
+  - [Analyzer rules и optimizer rules]()
+  - [Custom expressions, functions и physical strategies]()
+  - [Parser extensions и SQL syntax]()
+  - [Columnar rules и переходы row/columnar]()
+  - [Code generation, nullability и determinism custom expression]()
+  - [Версионная нестабильность internal APIs]()
+- [Plugins и низкоуровневые integrations]()
+  - [SparkPlugin, DriverPlugin и ExecutorPlugin]()
+  - [Executor metrics, listeners и lifecycle hooks]()
+  - [Shuffle plugins и внешние shuffle services]()
+  - [Connect protocol extensions при поддержке версии]()
+  - [Изоляция ошибок plugin и влияние на приложение]()
+  - [Тестирование совместимости и стоимости extension]()
+- [Работа с Apache Spark как open-source проектом]()
+  - [Issue tracker, SPIPs и обсуждение изменений]()
+  - [Минимальный воспроизводимый пример бага]()
+  - [Regression test, benchmark и проверка совместимости]()
+  - [Чтение commit history и release notes]()
+  - [Подготовка patch и соблюдение contribution guidelines]()
+  - [Проверка исправления в нужной ветке Spark]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 29. Миграции, совместимость и legacy
+</summary>
+
+- [Планирование обновления Spark]()
+  - [Migration guides для SQL, PySpark, Core, ML и streaming]()
+  - [Изменение требований Java, Scala и Python]()
+  - [Совместимость connectors, plugins и table formats]()
+  - [Изменение defaults и SQL semantics]()
+  - [Regression suite на реальных данных]()
+  - [Dual run, shadow validation и controlled rollout]()
+- [Миграция SQL и форматов данных]()
+  - [ANSI defaults, overflow и invalid casts]()
+  - [Datetime parsing и календарное rebasing]()
+  - [Timestamp precision и timezone behavior]()
+  - [Изменения type coercion, NULL и name resolution]()
+  - [Collations, VARIANT и новые типы по версии]()
+  - [Legacy configuration как временный механизм совместимости]()
+  - [Проверка ранее записанных файлов и таблиц]()
+- [Миграция API и приложений]()
+  - [Deprecated и removed APIs]()
+  - [RDD-heavy код → DataFrame/SQL при сохранении семантики]()
+  - [PySpark Classic → Spark Connect]()
+  - [Pandas/Arrow behavior и зависимости Python]()
+  - [JVM binary compatibility и пересборка artifacts]()
+  - [Замена private API поддерживаемыми interfaces]()
+- [Миграция streaming и table protocols]()
+  - [Checkpoint compatibility между версиями]()
+  - [Schema evolution stateful operators]()
+  - [State store provider и настройки состояния]()
+  - [Изменение query plan и допустимость продолжения checkpoint]()
+  - [Protocol upgrade Delta/Iceberg/Hudi и совместимость readers]()
+  - [Новая query lineage, replay и reconciliation при несовместимой миграции]()
+- [Legacy Spark Streaming: DStreams]()
+  - [StreamingContext и Discretized Streams]()
+  - [Receiver-based и direct sources]()
+  - [Window operations и updateStateByKey/mapWithState]()
+  - [Checkpointing, receiver WAL и recovery]()
+  - [Backpressure и особенности scheduling legacy streaming]()
+  - [Миграция DStreams на Structured Streaming]()
+  - [Проверка различий output semantics и гарантий доставки]()
+- [Исторические компоненты и API]()
+  - [Mesos как исторический cluster manager и отсутствие в актуальном наборе]()
+  - [RDD-based MLlib и границы его сопровождения]()
+  - [SparkR: поддержка и deprecated status по версии]()
+  - [Koalas и переход к Pandas API on Spark]()
+  - [Старые HiveContext/SQLContext и унификация через SparkSession]()
+  - [Delta Live Tables и платформенные декларативные pipelines: история и отличия от Apache SDP]()
+  - [Устаревшие конфигурации и инструкции из старых статей]()
+- [Перенос между платформами]()
+  - [Open-source Spark и vendor-specific APIs]()
+  - [Переход YARN ↔ Kubernetes ↔ managed service]()
+  - [Изменение identity, storage paths и catalog]()
+  - [Сохранение бизнес-семантики и стабильных identifiers]()
+  - [Проверка производительности и стоимости после переноса]()
+  - [План отката с учётом записанных данных и checkpoints]()
+
+</details>
+
+<details>
+<summary>
+
+  ### 30. Практические проекты и критерии уровня Senior
+</summary>
+
+- [Первый batch-проект: отчёт по файлу]()
+  - [CSV/JSON → явная схема → очистка → агрегаты → Parquet]()
+  - [Локальный запуск и проверка результата]()
+  - [Обработка NULL, некорректных типов и пустого входа]()
+  - [README с примером входа и командой запуска]()
+- [Проект SQL и DataFrame: аналитические витрины]()
+  - [Несколько источников, joins и оконные вычисления]()
+  - [Детерминированная дедупликация и исторические справочники]()
+  - [Контроль cardinality и сверка агрегатов]()
+  - [Сравнение SQL- и DataFrame-реализаций]()
+- [Проект RDD и Dataset: распределённое агрегирование]()
+  - [PairRDD, mapPartitions и custom aggregation]()
+  - [Typed Dataset и Encoders в Scala/Java]()
+  - [Сравнение с DataFrame по плану, корректности и стоимости]()
+  - [Проверка ассоциативности агрегата и повторного выполнения]()
+- [Инкрементальный batch-пайплайн]()
+  - [JDBC/source snapshot → staging → Lakehouse table]()
+  - [Cursor, lookback window и идемпотентность]()
+  - [SCD Type 1/2 и обработка late updates]()
+  - [Backfill, audit metrics и reconciliation]()
+- [Потоковая обработка Kafka]()
+  - [Kafka → parsing → validation → windows → sink]()
+  - [Watermark, duplicates и stream-stream join]()
+  - [Checkpoint, restart и проверка гарантий sink]()
+  - [Наблюдаемость lag, state size и freshness]()
+- [CDC-пайплайн]()
+  - [Debezium/source CDC → Kafka → актуальная таблица]()
+  - [Insert/update/delete и source sequence]()
+  - [Тестовые сценарии duplicate delivery и нарушения порядка CDC]()
+  - [Snapshot reconciliation и recovery после сбоя]()
+- [Проект произвольного состояния]()
+  - [StateProcessor для сессий, таймеров или бизнес-правил]()
+  - [TTL, bounded state и late events]()
+  - [RocksDB metrics и исследование роста состояния]()
+  - [Миграция схемы состояния и replay strategy]()
+- [Исследование оптимизации]()
+  - [Нагрузка со skew, small files, тяжёлым join и spill]()
+  - [Baseline, explain и Spark UI evidence]()
+  - [Partitioning, AQE, preaggregation и cache по результатам измерений]()
+  - [Доказательство одинакового результата и сравнение стоимости]()
+- [Проект Lakehouse и обслуживание таблиц]()
+  - [Delta либо Iceberg либо Hudi с конкурентными writers]()
+  - [Schema evolution, time travel и incremental consumers]()
+  - [Compaction, retention и безопасная очистка]()
+  - [Recovery данных и метаданных каталога]()
+- [Production-доставка Spark-приложения]()
+  - [JAR/wheel/image, CI checks и integration tests]()
+  - [YARN/Kubernetes/managed deployment]()
+  - [Оркестрация, параметры периода и идемпотентный rerun]()
+  - [Monitoring, runbook и план rollback]()
+- [Проект Spark Connect или Declarative Pipelines]()
+  - [Удалённый client либо декларативный граф datasets]()
+  - [Контроль зависимостей и session boundaries]()
+  - [Совместимость API и выбранной версии Spark]()
+  - [Повторяемая публикация результата и observability]()
+- [ML, графовый или GPU-проект]()
+  - [Подготовка признаков и ML Pipeline либо graph algorithm]()
+  - [Evaluation, persistence и воспроизводимость]()
+  - [Batch inference либо GPU benchmark при доступной инфраструктуре]()
+  - [Обоснование роли Spark и внешних компонентов]()
+- [Проект расширения Spark]()
+  - [Custom data source, catalog либо SparkSessionExtension]()
+  - [Pushdown, partitioning, commit/abort и retries]()
+  - [Compatibility tests и ограничение использования internal API]()
+  - [Документация contracts и поддерживаемых версий]()
+- [System design и инженерные решения]()
+  - [Платформа для большого числа источников и независимых consumers]()
+  - [Выбор batch/streaming по SLA и стоимости]()
+  - [Выбор storage, catalog, table format и deployment model]()
+  - [Capacity planning, backfill и ожидаемый рост]()
+  - [Security, ownership, observability и disaster recovery]()
+  - [Аргументированное решение, когда Spark не нужен]()
+- [Критерии готовности Senior]()
+  - [Понимание пути от API-вызова до физических tasks]()
+  - [Обоснование семантики результата, ordering и повторных попыток]()
+  - [Диагностика по планам, метрикам и логам]()
+  - [Оптимизация с измеримым эффектом и проверенной корректностью]()
+  - [Самостоятельная доставка и эксплуатация production pipeline]()
+  - [Восстановление после частичного сбоя и управление миграцией]()
+  - [Code review, документация решений и передача знаний команде]()
+  - [Компромиссы между сложностью, скоростью, стоимостью и надёжностью]()
 
 </details>
